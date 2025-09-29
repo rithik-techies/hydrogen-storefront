@@ -17,7 +17,7 @@ export function ProductPrice({price, compareAtPrice}) {
           </s>
         </div>
       ) : price ? (
-        <Money data={price} />
+        <Money className="text-red-600" data={price} />
       ) : (
         <span>&nbsp;</span>
       )}

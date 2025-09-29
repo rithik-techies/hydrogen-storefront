@@ -66,7 +66,7 @@ export function ProductForm({productOptions, selectedVariant}) {
                     <button
                       type="button"
                       className={`product-options-item${
-                        exists && !selected ? ' link' : ''
+                        exists && !selected ? ' link' : ' !text-white !bg-black'
                       }`}
                       key={option.name + name}
                       style={{
@@ -95,6 +95,7 @@ export function ProductForm({productOptions, selectedVariant}) {
           </div>
         );
       })}
+      <div className='inline-block transform transition-transform duration-300 hover:scale-90'> 
       <AddToCartButton
         disabled={!selectedVariant || !selectedVariant.availableForSale}
         onClick={() => {
@@ -114,6 +115,7 @@ export function ProductForm({productOptions, selectedVariant}) {
       >
         {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
       </AddToCartButton>
+    </div>
     </div>
   );
 }

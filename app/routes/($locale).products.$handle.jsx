@@ -107,9 +107,11 @@ export default function Product() {
 
   return (
     <div className="product">
+     <div className="transform transition-transform duration-300 hover:scale-90">
       <ProductImage image={selectedVariant?.image} />
+    </div>
       <div className="product-main">
-        <h1>{title}</h1>
+        <h1 className="text-blue-500 hover:text-blue-300 ">{title}</h1>
         <ProductPrice
           price={selectedVariant?.price}
           compareAtPrice={selectedVariant?.compareAtPrice}
@@ -122,8 +124,8 @@ export default function Product() {
         <br />
         <br />
         <p>
-          <strong>Description</strong>
-        </p>
+          <strong className='text-2xl'>Description</strong>
+        </p> 
         <br />
         <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
         <br />
