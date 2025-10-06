@@ -1,23 +1,24 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Flame, Search } from 'lucide-react';
-import image1 from '../assets/image1.webp';
-import image2 from '../assets/image2.webp';
+import banner_image_2 from '../assets/banner_image_2.png';
+import banner_image from '../assets/banner_image.png';
+
 
 export default function Banner() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
     {
-      bgImage: image2
+      bgImage: banner_image
     },
     {
-      bgImage: image1
+      bgImage: banner_image_2
     },
     {
-      bgImage: image2
+      bgImage: banner_image
     },
     {
-      bgImage: image1
+      bgImage: banner_image_2
     },
   ];
 
@@ -57,7 +58,7 @@ export default function Banner() {
                 <div className="absolute"></div>
               </div>
               <div className="relative  h-full">
-                <div className="container mx-auto h-full px-4 sm:px-6 lg:px-8 xl:px-12 max-w-7xl">
+                <div className="mx-auto h-full px-4 sm:px-6 lg:px-8 xl:px-12 max-w-7xl">
                   <div className="flex items-center h-full">
                     
                     <div className="w-full md:w-3/5 lg:w-3/5 py-12 md:py-6">

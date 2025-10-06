@@ -1,6 +1,6 @@
 body {
   font-family:
-    system-ui,
+    /* system-ui,
     -apple-system,
     BlinkMacSystemFont,
     'Segoe UI',
@@ -10,7 +10,9 @@ body {
     Cantarell,
     'Open Sans',
     'Helvetica Neue',
-    sans-serif;
+    sans-serif, */
+    'Poppins', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
   margin: 0;
   padding: 0;
 }
@@ -78,9 +80,9 @@ body {
   min-height: 100vh;
 }
 
-body > main {
+/* body > main {
   margin: 0 1rem 1rem 1rem;
-}
+} */
 
 section {
   padding: 1rem 0;
@@ -104,12 +106,12 @@ form {
 }
 
 input {
-  border-radius: 4px;
+  /* border-radius: 4px;
   border: 1px solid #000;
-  /* font-size: 1rem; */
+  font-size: 1rem;
   margin-bottom: 0.5rem;
   margin-top: 0.25rem;
-  padding: 0.5rem;
+  padding: 0.5rem; */
 }
 
 legend {

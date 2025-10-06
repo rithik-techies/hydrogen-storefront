@@ -2,8 +2,6 @@ import {Await, useLoaderData, Link} from 'react-router';
 import {Suspense} from 'react';
 import {Image} from '@shopify/hydrogen';
 import {ProductItem} from '~/components/ProductItem';
-import image1 from '../assets/image1.webp';
-import myVideo from '../assets/video1.mp4';
 import Banner from '~/components/Banner';
 import HowToUse from '~/components/HowToUse'
 import BenefitGridComponent from '~/components/GridComponent';
@@ -72,10 +70,10 @@ export default function Homepage() {
   const data = useLoaderData();
   return (
     <div className="home">
+      <Banner/>
       <FeaturedCollection collection={data.featuredCollection} />
       <FeaturedCollection2 collection={data.featuredCollection2} />
       <RecommendedProducts products={data.recommendedProducts} />
-      <Banner />
       <HowToUse />
       <BenefitGridComponent/>
     </div>
@@ -99,9 +97,9 @@ function FeaturedCollection({collection}) {
       {/* {image && ( */}
         <div className="grid grid-cols-2 gap-0.5">
           {/* <Image data={image} sizes="100vw" /> */}
-          <img src={image1} alt="Description" className="w-full h-auto" />
+          {/* <img src={image1} alt="Description" className="w-full h-auto" />
           <video src={myVideo} className="w-full h-auto" controls autoPlay={false} loop muted
-/>
+/> */}
         </div>
       {/* )} */}
     </Link>
@@ -117,7 +115,7 @@ function FeaturedCollection2({collection}) {
       to={`/collections/${collection.handle}`}
     >
         <div className="gap-0.5">
-          <img src={image1} alt="Description" className="w-full h-auto" />
+          {/* <img src={image1} alt="Description" className="w-full h-auto" /> */}
         </div>
     </Link>
       </>

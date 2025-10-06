@@ -1,69 +1,133 @@
-import { Suspense, useEffect, useState } from 'react';
-import { Await, NavLink } from 'react-router';
-import { ChevronRight } from 'lucide-react';
-import {useLoaderData, Link} from 'react-router';
-import {Image} from '@shopify/hydrogen';
+import { Suspense, useState } from 'react';
+import { Await, Link } from 'react-router';
+import { ArrowRight, ArrowRightCircle, ChevronRight } from 'lucide-react';
+import { useLoaderData } from 'react-router';
+import twitter from '../assets/twitter.svg';
+import tiktok from '../assets/tiktok.svg';
+import facebook from '../assets/facebook.svg';
+import youtube from '../assets/youtube.svg';
+import { Image } from '@shopify/hydrogen';
 
-/**
- * @param {LoaderFunctionArgs} args
- */
-export async function loader(args) {
-  // Start fetching non-critical data without blocking time to first byte
-  const deferredData = loadDeferredData(args);
-
-  // Await the critical data required to render initial state of the page
-  const criticalData = await loadCriticalData(args);
-
-  return {...deferredData, ...criticalData};
-}
-
-/**
- * Load data necessary for rendering content above the fold. This is the critical data
- * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
- * @param {LoaderFunctionArgs}
- */
-
-async function loadCriticalData({context, request}) {
-const { collections } = await context.storefront.query(COLLECTIONS_QUERY, {
-    variables: {
-      first: 6,
-    },
-  });
-
-  return { collections };
-}
-
-/**
- * Load data for rendering content below the fold. This data is deferred and will be
- * fetched after the initial page load. If it's unavailable, the page should still 200.
- * Make sure to not throw any errors here, as it will cause the page to 500.
- * @param {LoaderFunctionArgs}
- */
-function loadDeferredData({context}) {
-  return {};
-}
-
-
-export function Footer({footer: footerPromise, header, publicStoreDomain}) {
-   const {collections} = useLoaderData();
+export function Footer({ footer: footerPromise }) {
+ 
   return (
-   <Suspense>
+    <Suspense>
       <Await resolve={footerPromise}>
         {(footer) => (
-          <footer className="bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f] px-6 md:px-10 py-10 text-white overflow-hidden flex flex-col lg:flex-row justify-between gap-10">
-            <div className="flex-1 max-w-3xl z-10">
-              <NewsletterSection />
-            </div>
-            <div className="flex-1 collections flex flex-col gap-3">
-              <p className="font-semibold text-lg">Collections</p>
-             <div className="flex flex-col gap-2">
-                  <div className="recommended-collections-grid">
-                    {collections?.nodes?.map((collection) => (
-                      <CollectionItem key={collection.id} collection={collection} />
-                    ))}
-                  </div>
+          <footer className="bg-white border-t border-gray-200">
+            {/* Main Footer Content */}
+            <div className="mx-auto max-w-7xl px-6 pb-8 pt-20 sm:pt-24 lg:px-8 lg:pt-28">
+              <div className='xl:grid sm:gap-5 xl:grid-cols-3 xl:gap-5'>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 xl:col-span-2">
+                {/* Column 1 - Search */}
+                <div className="flex flex-col gap-3">
+                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
+                    Search
+                  </h3>
+                  <nav className="flex flex-col gap-4">
+                    <FooterLink to="/">Home page</FooterLink>
+                    <FooterLink to="/search">Search</FooterLink>
+                    <FooterLink to="/collections">All collections</FooterLink>
+                    <FooterLink to="/collections/men">Men</FooterLink>
+                  </nav>
                 </div>
-            </div>
+
+                {/* Column 2 - Home page */}
+                <div className="flex flex-col gap-3">
+                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
+                    Home page
+                  </h3>
+                  <nav className="flex flex-col gap-4">
+                    <FooterLink to="/">Home page</FooterLink>
+                    <FooterLink to="/search">Search</FooterLink>
+                    <FooterLink to="/collections/men">Men</FooterLink>
+                    <FooterLink to="/">Home page</FooterLink>
+                  </nav>
+                </div>
+
+                {/* Column 3 - All collections */}
+                <div className="flex flex-col gap-3">
+                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
+                    All collections
+                  </h3>
+                  <nav className="flex flex-col gap-4">
+                    <FooterLink to="/collections/women">Women</FooterLink>
+                    <FooterLink to="/">Home page</FooterLink>
+                    <FooterLink to="/search">Search</FooterLink>
+                    <FooterLink to="/collections">All collections</FooterLink>
+                  </nav>
+                </div>
+
+                {/* Column 4 - News */}
+                <div className="flex flex-col gap-3">
+                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
+                    News
+                  </h3>
+                  <nav className="flex flex-col gap-4">
+                    <FooterLink to="/">Home page</FooterLink>
+                    <FooterLink to="/search">Search</FooterLink>
+                    <FooterLink to="/collections/men">Men</FooterLink>
+                    <FooterLink to="/blogs/news">News</FooterLink>
+                  </nav>
+                </div>
+
+                {/* Column 5 - Newsletter */}
+             
+              </div>
+               <div className="flex flex-col gap-3col-span-2 md:col-span-3 mt-2 sm:mt-4 md:mt-6 lg:mt-0 lg:col-span-1 border rounded-2xl border-gray-200">
+                <div className="flex p-4 items-center gap-2 mb-1 ">
+                  <svg
+                    className="w-6 h-6 text-gray-900"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <h3 className="font-semibold text-gray-900 text-sm">
+                    Stay up to date
+                  </h3>
+                </div>
+                <div className='p-4  border-t border-gray-300'>
+                <p className="text-gray-600  text-sm leading-relaxed ">
+                  Subscribe to our newsletter to get the latest updates and special offers.
+                </p>
+                </div>
+                  <NewsletterForm/>
+              </div>
+              </div>
+           
+
+            {/* Bottom Footer */}
+             <div class="mt-16 border-t border-gray-900/10 dark:border-neutral-700 pt-8 sm:mt-20 md:flex md:items-center md:justify-between lg:mt-20">
+             <div class="flex mb-2 sm:mb-4 md:mb-6 lg:mb-0 flex-wrap gap-x-6 gap-y-3 md:order-2">
+              <nav class="nc-SocialsList flex flex-wrap gap-4 text-2xl text-neutral-600 !gap-5">
+                <Link class="block w-6 h-6 opacity-90 hover:opacity-100" to="https://www.twitter.com" target="_blank" rel="noopener noreferrer" title="Twitter">
+                  <span class="sr-only">Twitter</span>
+                    <Image width="30" class="w-full" sizes="32px" src={twitter} alt="Twitter"/>
+                </Link>
+                <Link class="block w-6 h-6 opacity-90 hover:opacity-100" to="https://www.instagram.com" target="_blank" rel="noopener noreferrer" title="Tiktok">
+                  <span class="sr-only">Tiktok</span>
+                    <Image width="30" class="w-full" sizes="32px" src={tiktok} alt="Tiktok"/>
+                </Link>
+                <Link class="block w-6 h-6 opacity-90 hover:opacity-100" to="https://www.facebook.com" target="_blank" rel="noopener noreferrer" title="Facebook">
+                  <span class="sr-only">Facebook</span>
+                    <Image width="30" class="w-full" sizes="32px" src={facebook}  alt="Facebook"/>
+                </Link>
+                <Link class="block w-6 h-6 opacity-90 hover:opacity-100" to="https://youtube.com" target="_blank" rel="noopener noreferrer" title="Youtube">
+                  <span class="sr-only">Youtube</span>
+                    <Image width="30" class="w-full" sizes="32px" src={youtube} alt="Youtube"/>
+                </Link>
+              </nav>
+                </div>
+                <p class=" text-[13px] leading-5 text-gray-500 md:order-1 ">© 2025Rithik Hydrogen Main, Inc. All rights reserved.</p>
+                </div>
+                 </div>
           </footer>
         )}
       </Await>
@@ -71,104 +135,57 @@ export function Footer({footer: footerPromise, header, publicStoreDomain}) {
   );
 }
 
-function CollectionItem({ collection ,index}) {
+function FooterLink({ to, children }) {
   return (
     <Link
-      key={collection.id}
-      to={`/collections/${collection.handle}`}
+      to={to}
+      className="text-gray-600 hover:text-gray-900 transition-colors text-sm w-fit"
       prefetch="intent"
-      className="text-white hover:text-gray-400 transition-colors"
     >
-      {collection.title}
+      {children}
     </Link>
   );
 }
 
-function NewsletterSection() {
-  const [input, setInput] = useState('');
+function NewsletterForm() {
+  const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-  
-  const handleSubmit = () => {
-    if (input.trim()) {
-      console.log('Newsletter signup:', input);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (email.trim()) {
+      console.log('Newsletter signup:', email);
       setIsSubmitted(true);
       setTimeout(() => {
-        setInput('');
+        setEmail('');
         setIsSubmitted(false);
       }, 3000);
     }
   };
-  
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSubmit();
-    }
-  };
-  
+
   return (
-    <div className="max-w-3xl">
-      <h2 className="!text-4xl !sm:text-2xl md:text-5xl lg:text-5xl xl:text-5xl  !font-light !mb-15 leading-tight text-white">
-        Hey, Hola, Bonjour. Become a July local.<br/> Sign up and receive updates, including collection launches, early access to collections and more.
-      </h2>
-      <div className="transition-all duration-300">
-        <div className="w-4/5 flex items-center !rounded-full footer-container gap-3">
-         <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              placeholder="your@email.com or +11234567890"
-              className="w-[90%] footer-input text-white !text-xl !px-7 !py-5 !focus:border-0 !focus:outline-none !focus:ring-0 !border-0"
-            />
-            <button><ChevronRight className='w-10 h-12 pr-5 cursor-pointer'/></button>
-        </div>
-      </div>
-      
-      <div className="mt-6 flex items-start gap-3">
-        <p className="text-xs text-[rgba(255,255,255,0.5)] leading-relaxed">
-          You can unsubscribe at any time. Read about how we process your personal data in our{' '}
-          <a href="/policies/privacy-policy" className="!underline !text-white hover:text-gray-400 transition-colors">Privacy Policy</a>
-        </p>
-      </div>
-    </div>
+    <form onSubmit={handleSubmit} className="relative mt-1 p-4">
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Enter your email address"
+        className="w-full px-4 py-3 pr-12 border !border-gray-200 !rounded-2xl text-sm !focus:outline-none !focus:ring-2 !focus:ring-blue-100 focus:border-transparent transition-all bg-white"
+        required
+      />
+      <button
+        type="submit"
+        className="absolute !right-2 top-1/2 -translate-y-1/2 bg-black text-white rounded-full p-2 hover:bg-gray-800 transition-colors"
+        aria-label="Subscribe"
+      >
+        <ArrowRight className="w-5 h-5" />
+      </button>
+      {isSubmitted && (
+        <p className="text-green-600 text-xs mt-2">Thank you for subscribing!</p>
+      )}
+    </form>
   );
 }
-
-const COLLECTIONS_QUERY = `#graphql
-  fragment Collection on Collection {
-    id
-    title
-    handle
-  }
-  query StoreCollections(
-    $country: CountryCode
-    $endCursor: String
-    $first: Int
-    $language: LanguageCode
-    $last: Int
-    $startCursor: String
-  ) @inContext(country: $country, language: $language) {
-    collections(
-      first: $first,
-      last: $last,
-      before: $startCursor,
-      after: $endCursor
-    ) {
-      nodes {
-        ...Collection
-      }
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-        startCursor
-        endCursor
-      }
-    }
-  }
-`;
 
 /** @typedef {import('@shopify/remix-oxygen').LoaderFunctionArgs} LoaderFunctionArgs */
 /** @typedef {import('storefrontapi.generated').CollectionFragment} CollectionFragment */
