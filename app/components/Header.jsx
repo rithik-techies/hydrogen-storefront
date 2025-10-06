@@ -1,7 +1,17 @@
-import {Suspense} from 'react';
-import {Await, NavLink, useAsyncValue} from 'react-router';
+import {Suspense, useState} from 'react';
+import {Await, NavLink, useAsyncValue, Form, useNavigate} from 'react-router';
 import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
+import SearchIcon from '../assets/searchicon.svg';
+import cartIcon from '../assets/carticon.svg';
+import userIcon from '../assets/usericon.svg'
+import hamBurger from '../assets/hambuger.svg'
+import ciseco from '../assets/ciseco.svg'
+
+
+
+
+
 
 /**
  * @param {HeaderProps}
@@ -9,9 +19,10 @@ import {useAside} from '~/components/Aside';
 export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
   const {shop, menu} = header;
   return (
-    <header className="header">
+    <header className="header !flex !justify-between ">
+       <HeaderMenuMobileToggle />
       <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
+      <img src={ciseco} alt="shop name" className='w-30 h-30' />
       </NavLink>
       <HeaderMenu
         menu={menu}
@@ -86,19 +97,67 @@ export function HeaderMenu({
  * @param {Pick<HeaderProps, 'isLoggedIn' | 'cart'>}
  */
 function HeaderCtas({isLoggedIn, cart}) {
+  const [searchOpen, setSearchOpen] = useState(false);
+
   return (
-    <nav className="header-ctas" role="navigation">
-      <HeaderMenuMobileToggle />
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
-        <Suspense fallback="Sign in">
-          <Await resolve={isLoggedIn} errorElement="Sign in">
-            {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
+    <nav className="header-ctas ml-0 sm:ml-auto flex items-center gap-2 md:gap-3" role="navigation">
+      {searchOpen ? (
+        <div className="flex items-center border-2 animate-slideIn border-gray-300 w-full max-w-[200px] md:max-w-[250px] rounded-full">
+          {/* Animate only the input */}
+          <SearchBar 
+            searchOpen={searchOpen} 
+            setSearchOpen={setSearchOpen} 
+            className="animate-slideIn flex-1"
+          />
+          {/* Toggle inside acts like close icon */}
+          <button 
+            onClick={() => setSearchOpen(false)}
+            className="flex-shrink-0 p-1"
+          >
+            <img src={SearchIcon} alt="Close Search" className="w-7 h-7 md:w-9 md:h-9" />
+          </button>
+        </div>
+      ) : (
+        <SearchToggle setSearchOpen={setSearchOpen} searchOpen={searchOpen} />
+      )}
+      <NavLink prefetch="intent" to="/account" style={activeLinkStyle} className="flex-shrink-0">
+        <Suspense fallback={null}>
+          <Await resolve={isLoggedIn} errorElement={null}>
+            {() => (
+              <img src={userIcon} alt="User" className="w-7 h-7 md:w-9 md:h-9" />
+            )}
           </Await>
         </Suspense>
       </NavLink>
-      <SearchToggle />
+      
       <CartToggle cart={cart} />
     </nav>
+  );
+}
+
+function SearchBar({searchOpen, setSearchOpen}) {
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const query = formData.get('q');
+    if (query) {
+      navigate(`/search?q=${encodeURIComponent(query)}`);
+      setSearchOpen(false);
+    }
+  };
+
+  return (
+    <Form method="get" action="/search" onSubmit={handleSubmit} className="flex-1">
+      <input
+        type="search"
+        name="q"
+        placeholder="Search..."
+        className="w-full !m-0 !border-0 rounded-full outline-none text-sm md:text-base px-2 md:px-3 py-1.5 md:py-2 bg-transparent !focus:outline-none"
+        autoFocus={searchOpen}
+      />
+    </Form>
   );
 }
 
@@ -109,16 +168,19 @@ function HeaderMenuMobileToggle() {
       className="header-menu-mobile-toggle reset"
       onClick={() => open('mobile')}
     >
-      <h3>☰</h3>
+      <img src={hamBurger} alt="Menu" className="w-7 h-7 md:w-9 md:h-9" />
     </button>
   );
 }
 
-function SearchToggle() {
-  const {open} = useAside();
+function SearchToggle({setSearchOpen, searchOpen}) {
+  const handleClick = () => {
+    setSearchOpen(!searchOpen);
+  };
+
   return (
-    <button className="reset" onClick={() => open('search')}>
-      Search
+    <button className="reset flex-shrink-0" onClick={handleClick}>
+      <img src={SearchIcon} alt="Search" className="w-7 h-7 md:w-9 md:h-9" />
     </button>
   );
 }
@@ -132,6 +194,7 @@ function CartBadge({count}) {
 
   return (
     <a
+      className='relative inline-block flex-shrink-0'
       href="/cart"
       onClick={(e) => {
         e.preventDefault();
@@ -144,7 +207,14 @@ function CartBadge({count}) {
         });
       }}
     >
-      Cart {count === null ? <span>&nbsp;</span> : count}
+      <div className="w-7 h-7 md:w-9 md:h-9 rounded-full border-2 border-gray-900 flex items-center justify-center">
+        <img src={cartIcon} alt="Cart" className="w-5 h-5 md:w-6 md:h-6" />
+      </div> 
+      {count > 0 && (
+        <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 md:w-5 md:h-5 bg-black text-white text-[10px] md:text-[11px] font-semibold rounded-full border-2 border-white">
+          {count}
+        </span>
+      )}
     </a>
   );
 }
@@ -233,5 +303,5 @@ function activeLinkStyle({isActive, isPending}) {
  */
 
 /** @typedef {import('@shopify/hydrogen').CartViewPayload} CartViewPayload */
-/** @typedef {import('storefrontapi.generated').HeaderQuery} HeaderQuery */
+/** @typedef {import('@shopify/hydrogen').HeaderQuery} HeaderQuery */
 /** @typedef {import('storefrontapi.generated').CartApiQueryFragment} CartApiQueryFragment */

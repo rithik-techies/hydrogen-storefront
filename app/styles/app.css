@@ -167,7 +167,7 @@ button.reset:hover:not(:has(> *)) {
   background: #fff;
   display: flex;
   height: var(--header-height);
-  padding: 0 1rem;
+  padding: 0 0.8rem;
   position: sticky;
   top: 0;
   z-index: 1;
@@ -203,7 +203,6 @@ button.reset:hover:not(:has(> *)) {
   align-items: center;
   display: flex;
   grid-gap: 1rem;
-  margin-left: auto;
 }
 
 .header-ctas > * {
@@ -232,6 +231,20 @@ button.reset:hover:not(:has(> *)) {
 .footer-menu a {
   color: var(--color-light);
   min-width: fit-content;
+}
+.footer-para{
+  font-family:'Courier New', Courier, monospace;
+}
+.footer-container{
+  background-color: #FFFFFF33;
+}
+
+.footer-input::placeholder{
+  color: white;
+  font-size: 1.5rem;
+}
+.footer-input:focus{
+  outline: none !important;
 }
 
 /*
@@ -520,4 +533,85 @@ button.reset:hover:not(:has(> *)) {
 .account-logout {
   display: inline-block;
 }
+/* Search Input Wrapper - works for both mobile and desktop */
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  animation: slideIn 0.3s ease;
+}
 
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.9s ease;
+}
+
+.search-form {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+  font-size: 14px;
+  padding: 0.5rem 1rem;
+  background: rgb(247, 246, 244);
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  background: white;
+  border-color: #999;
+}
+
+/* Header CTA spacing */
+.header-ctas {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+  .search-input-wrapper {
+    flex: 1;
+    max-width: 200px;
+  }
+  
+  .search-input {
+    font-size: 14px;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+  .search-input-wrapper {
+    width: 250px;
+  }
+  
+  .search-input {
+    font-size: 15px;
+    padding: 0.6rem 1.2rem;
+  }
+}
+
+/* Hide mobile toggle on desktop */
+@media (min-width: 768px) {
+  .header-menu-mobile-toggle {
+    display: none;
+  }
+}

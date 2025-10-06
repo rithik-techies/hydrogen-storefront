@@ -1,6 +1,7 @@
 import {useLoaderData, Link} from 'react-router';
 import {getPaginationVariables, Image} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
+import CollectionSlider from '~/components/CollectionSlider';
 
 /**
  * @param {LoaderFunctionArgs} args
@@ -27,7 +28,9 @@ async function loadCriticalData({context, request}) {
 
   const [{collections}] = await Promise.all([
     context.storefront.query(COLLECTIONS_QUERY, {
-      variables: paginationVariables,
+      variables:{
+        first:10
+      },
     }),
     // Add other queries here, so that they are loaded in parallel
   ]);
@@ -50,6 +53,7 @@ export default function Collections() {
   const {collections} = useLoaderData();
 
   return (
+    <>
     <div className="collections">
       <h1>Collections</h1>
       <PaginatedResourceSection
@@ -65,6 +69,8 @@ export default function Collections() {
         )}
       </PaginatedResourceSection>
     </div>
+    <CollectionSlider collections={collections.nodes} />
+    </>
   );
 }
 

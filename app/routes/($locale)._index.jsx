@@ -2,6 +2,12 @@ import {Await, useLoaderData, Link} from 'react-router';
 import {Suspense} from 'react';
 import {Image} from '@shopify/hydrogen';
 import {ProductItem} from '~/components/ProductItem';
+import image1 from '../assets/image1.webp';
+import myVideo from '../assets/video1.mp4';
+import Banner from '~/components/Banner';
+import HowToUse from '~/components/HowToUse'
+import BenefitGridComponent from '~/components/GridComponent';
+
 
 /**
  * @type {MetaFunction}
@@ -29,15 +35,17 @@ export async function loader(args) {
  * @param {LoaderFunctionArgs}
  */
 async function loadCriticalData({context}) {
-  const [{collections}] = await Promise.all([
+const [{collections}, {collections: collections2}] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
-    // Add other queries here, so that they are loaded in parallel
+    context.storefront.query(FEATURED_COLLECTION_QUERY_2),
   ]);
 
   return {
     featuredCollection: collections.nodes[0],
+    featuredCollection2: collections2.nodes[0],
   };
 }
+
 
 /**
  * Load data for rendering content below the fold. This data is deferred and will be
@@ -65,7 +73,11 @@ export default function Homepage() {
   return (
     <div className="home">
       <FeaturedCollection collection={data.featuredCollection} />
+      <FeaturedCollection2 collection={data.featuredCollection2} />
       <RecommendedProducts products={data.recommendedProducts} />
+      <Banner />
+      <HowToUse />
+      <BenefitGridComponent/>
     </div>
   );
 }
@@ -77,21 +89,42 @@ export default function Homepage() {
  */
 function FeaturedCollection({collection}) {
   if (!collection) return null;
-  const image = collection?.image;
+  // const image = collection?.image;
   return (
+    <>
+    <Link
+      className="featured-collection !mb-1"
+      to={`/collections/${collection.handle}`}
+    >
+      {/* {image && ( */}
+        <div className="grid grid-cols-2 gap-0.5">
+          {/* <Image data={image} sizes="100vw" /> */}
+          <img src={image1} alt="Description" className="w-full h-auto" />
+          <video src={myVideo} className="w-full h-auto" controls autoPlay={false} loop muted
+/>
+        </div>
+      {/* )} */}
+    </Link>
+      </>
+  );
+}
+function FeaturedCollection2({collection}) {
+  if (!collection) return null;
+  return (
+    <>
     <Link
       className="featured-collection"
       to={`/collections/${collection.handle}`}
     >
-      {image && (
-        <div className="featured-collection-image">
-          <Image data={image} sizes="100vw" />
+        <div className="gap-0.5">
+          <img src={image1} alt="Description" className="w-full h-auto" />
         </div>
-      )}
-      <h1>{collection.title}</h1>
     </Link>
+      </>
   );
 }
+
+
 
 /**
  * @param {{
@@ -138,6 +171,28 @@ const FEATURED_COLLECTION_QUERY = `#graphql
     collections(first: 1, sortKey: UPDATED_AT, reverse: true) {
       nodes {
         ...FeaturedCollection
+      }
+    }
+  }
+`;
+const FEATURED_COLLECTION_QUERY_2 = `#graphql
+  fragment FeaturedCollection2 on Collection {
+    id
+    title
+    image {
+      id
+      url
+      altText
+      width
+      height
+    }
+    handle
+  }
+  query FeaturedCollection($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    collections(first: 1, sortKey: TITLE, reverse: false) {
+      nodes {
+        ...FeaturedCollection2
       }
     }
   }
