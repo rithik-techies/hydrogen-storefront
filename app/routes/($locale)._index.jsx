@@ -2,8 +2,11 @@ import {Await, useLoaderData, Link} from 'react-router';
 import {Suspense} from 'react';
 import {Image} from '@shopify/hydrogen';
 import {ProductItem} from '~/components/ProductItem';
+import {getPaginationVariables} from '@shopify/hydrogen';
+import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import Banner from '~/components/Banner';
 import HowToUse from '~/components/HowToUse'
+import CollectionSlider from '~/components/CollectionSlider'
 import BenefitGridComponent from '~/components/GridComponent';
 
 
@@ -32,17 +35,33 @@ export async function loader(args) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  * @param {LoaderFunctionArgs}
  */
-async function loadCriticalData({context}) {
-const [{collections}, {collections: collections2}] = await Promise.all([
-    context.storefront.query(FEATURED_COLLECTION_QUERY),
-    context.storefront.query(FEATURED_COLLECTION_QUERY_2),
+async function loadCriticalData({ context, request }) {
+  const paginationVariables = getPaginationVariables(request, {
+    pageBy: 4,
+  });
+
+  const [
+    // { collections: featuredCollections },
+    // { collections: featuredCollections2 },
+    { collections }
+  ] = await Promise.all([
+    // context.storefront.query(FEATURED_COLLECTION_QUERY),
+    // context.storefront.query(FEATURED_COLLECTION_QUERY_2),
+    context.storefront.query(COLLECTIONS_QUERY, {
+      variables: {
+        first: 5,
+        ...paginationVariables,
+      },
+    }),
   ]);
 
   return {
-    featuredCollection: collections.nodes[0],
-    featuredCollection2: collections2.nodes[0],
+    // featuredCollection: featuredCollections.nodes[0],
+    // featuredCollection2: featuredCollections2.nodes[0],
+    collections,
   };
 }
+
 
 
 /**
@@ -67,13 +86,14 @@ function loadDeferredData({context}) {
 
 export default function Homepage() {
   /** @type {LoaderReturnData} */
-  const data = useLoaderData();
+  const {collections} = useLoaderData();
   return (
     <div className="home">
       <Banner/>
-      <FeaturedCollection collection={data.featuredCollection} />
+      {/* <FeaturedCollection collection={data.featuredCollection} />
       <FeaturedCollection2 collection={data.featuredCollection2} />
-      <RecommendedProducts products={data.recommendedProducts} />
+      <RecommendedProducts products={data.recommendedProducts} /> */}
+      <CollectionSlider collections={collections.nodes}/>
       <HowToUse />
       <BenefitGridComponent/>
     </div>
@@ -220,6 +240,45 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
     products(first: 4, sortKey: UPDATED_AT, reverse: true) {
       nodes {
         ...RecommendedProduct
+      }
+    }
+  }
+`;
+const COLLECTIONS_QUERY = `#graphql
+  fragment Collection on Collection {
+    id
+    title
+    handle
+    image {
+      id
+      url
+      altText
+      width
+      height
+    }
+  }
+  query StoreCollections(
+    $country: CountryCode
+    $endCursor: String
+    $first: Int
+    $language: LanguageCode
+    $last: Int
+    $startCursor: String
+  ) @inContext(country: $country, language: $language) {
+    collections(
+      first: $first,
+      last: $last,
+      before: $startCursor,
+      after: $endCursor
+    ) {
+      nodes {
+        ...Collection
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
       }
     }
   }

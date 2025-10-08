@@ -55,8 +55,8 @@ p {
 }
 
 a {
-  color: #000;
-  text-decoration: none;
+  /* color: #000;
+  text-decoration: none; */
 }
 
 a:hover {
@@ -120,13 +120,13 @@ legend {
 }
 
 ul {
-  list-style: none;
+  /* list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0; */
 }
 
 li {
-  margin-bottom: 0.5rem;
+  /* margin-bottom: 0.5rem; */
 }
 
 dl {

@@ -77,7 +77,7 @@ export default function Banner() {
                         </p>
                       </div>
                       <button className="group relative bg-gray-900 hover:bg-gray-800 text-white px-8 sm:px-10 lg:px-12 py-3.5 sm:py-4 lg:py-5 rounded-full text-sm sm:text-base lg:text-lg font-semibold transition-all duration-300 flex items-center gap-3 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 overflow-hidden">
-                        <span className="relative z-10">Explore now</span>
+                        <span className="relative z-5">Explore now</span>
                         <Search className="w-4 h-4 sm:w-5 sm:h-5 relative z-10 group-hover:rotate-12 transition-transform duration-300" />
                         <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       </button>
