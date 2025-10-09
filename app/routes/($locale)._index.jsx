@@ -2,12 +2,13 @@ import {Await, useLoaderData, Link} from 'react-router';
 import {Suspense} from 'react';
 import {Image} from '@shopify/hydrogen';
 import {ProductItem} from '~/components/ProductItem';
-import {getPaginationVariables} from '@shopify/hydrogen';
-import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
-import Banner from '~/components/Banner';
+import SlideShow from '~/components/SlideShow';
+import banner_img from '../assets/banner_img.webp';
+import banner_img_2 from '../assets/ciseco_img_with_text_1.webp'
 import HowToUse from '~/components/HowToUse'
 import CollectionSlider from '~/components/CollectionSlider'
 import BenefitGridComponent from '~/components/GridComponent';
+import Banner from '~/components/Banner'
 
 
 /**
@@ -36,10 +37,6 @@ export async function loader(args) {
  * @param {LoaderFunctionArgs}
  */
 async function loadCriticalData({ context, request }) {
-  const paginationVariables = getPaginationVariables(request, {
-    pageBy: 4,
-  });
-
   const [
     // { collections: featuredCollections },
     // { collections: featuredCollections2 },
@@ -49,8 +46,7 @@ async function loadCriticalData({ context, request }) {
     // context.storefront.query(FEATURED_COLLECTION_QUERY_2),
     context.storefront.query(COLLECTIONS_QUERY, {
       variables: {
-        first: 5,
-        ...paginationVariables,
+        first: 8,
       },
     }),
   ]);
@@ -85,17 +81,39 @@ function loadDeferredData({context}) {
 }
 
 export default function Homepage() {
+  const handleClick = () => {
+    alert("Button clicked!");
+  };
   /** @type {LoaderReturnData} */
   const {collections} = useLoaderData();
   return (
     <div className="home">
-      <Banner/>
+      <SlideShow/>
       {/* <FeaturedCollection collection={data.featuredCollection} />
       <FeaturedCollection2 collection={data.featuredCollection2} />
       <RecommendedProducts products={data.recommendedProducts} /> */}
       <CollectionSlider collections={collections.nodes}/>
+      {/* <BenefitGridComponent/> */}
       <HowToUse />
-      <BenefitGridComponent/>
+      <Banner
+       heading = "Earn free money with Ciseco"
+       description = "With Ciseco you will get a freeship & savings combo, etc."
+       buttonText = "Discover more"
+       imageUrl = {banner_img_2}
+       imageAlt = "Kid with skateboard"
+      onButtonClick={handleClick}
+      imagePosition = "right"
+      background_color = "white"
+      buttonText_2= "Saving combo"/>
+      <Banner
+       heading = "Special offer in kids products"
+       description = "Fashion is a form of self-expression and autonomy at a particular period and place."
+       buttonText = "Discover more"
+       imageUrl = {banner_img}
+       imageAlt = "Kid with skateboard"
+      onButtonClick={handleClick}
+      imagePosition = "left"
+      background_color = "yellow"/>
     </div>
   );
 }
