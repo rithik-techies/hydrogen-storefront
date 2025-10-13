@@ -41,7 +41,7 @@ export default function HowToUse() {
   ];
 
   return (
-    <div className="mx-auto grid py-30 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-6">
+    <div className="mx-auto grid py-30 w-full max-w-7xl lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-6">
       {steps.map((el, index) => (
         <div key={index} className="flex flex-col items-center text-center p-4">
           <Image src={el.image} alt={el.title | "Image"} width={144} height={144} sizes="(max-width: 768px) 100px, 200px" className="w-24 h-24 mb-10" />

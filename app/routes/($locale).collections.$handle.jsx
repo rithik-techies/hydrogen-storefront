@@ -4,6 +4,8 @@ import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {ProductItem} from '~/components/ProductItem';
+import Banner from '~/components/Banner';
+import banner_img_2 from '../assets/ciseco_img_with_text_1.webp';
 
 /**
  * @type {MetaFunction<typeof loader>}
@@ -73,6 +75,7 @@ function loadDeferredData({context}) {
 }
 
 export default function Collection() {
+  const handleClick = () => alert("Button clicked!");
   /** @type {LoaderReturnData} */
   const {collection} = useLoaderData();
 
@@ -99,6 +102,17 @@ export default function Collection() {
             handle: collection.handle,
           },
         }}
+      />
+      <Banner
+        heading="Earn free money with Ciseco"
+        description="With Ciseco you will get a freeship & savings combo, etc."
+        buttonText="Discover more"
+        imageUrl={banner_img_2}
+        imageAlt="Kid with skateboard"
+        onButtonClick={handleClick}
+        imagePosition="right"
+        background_color="white"
+        buttonText_2="Saving combo"
       />
     </div>
   );

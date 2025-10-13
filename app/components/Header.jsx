@@ -248,23 +248,23 @@ const sections = Object.fromEntries(MENU_SECTIONS.map(s => [s.title, s.links]));
         {/* Content */}
         <div className="flex-1 p-2 overflow-y-auto">
         {/* Social Icons */}
-        <div class="flex mb-6 flex-wrap gap-x-6 gap-y-3 md:order-2">
-        <nav class="nc-SocialsList flex flex-wrap gap-2.5 text-2xl text-neutral-600 ">
-          <Link class="block w-7 h-7 opacity-90 hover:opacity-100" to="https://www.twitter.com" target="_blank" rel="noopener noreferrer" title="Twitter">
-            <span class="sr-only">Twitter</span>
-              <Image width="30" class="w-full" sizes="32px" src={twitter} alt="Twitter"/>
+        <div className="flex mb-6 flex-wrap gap-x-6 gap-y-3 md:order-2">
+        <nav className="nc-SocialsList flex flex-wrap gap-2.5 text-2xl text-neutral-600 ">
+          <Link className="block w-7 h-7 opacity-90 hover:opacity-100" to="https://www.twitter.com" target="_blank" rel="noopener noreferrer" title="Twitter">
+            <span className="sr-only">Twitter</span>
+              <Image width="30" className="w-full" sizes="32px" src={twitter} alt="Twitter"/>
           </Link>
-          <Link class="block w-7 h-7 opacity-90 hover:opacity-100" to="https://www.instagram.com" target="_blank" rel="noopener noreferrer" title="Tiktok">
-            <span class="sr-only">Tiktok</span>
-              <Image width="30" class="w-full" sizes="32px" src={tiktok} alt="Tiktok"/>
+          <Link className="block w-7 h-7 opacity-90 hover:opacity-100" to="https://www.instagram.com" target="_blank" rel="noopener noreferrer" title="Tiktok">
+            <span className="sr-only">Tiktok</span>
+              <Image width="30" className="w-full" sizes="32px" src={tiktok} alt="Tiktok"/>
           </Link>
-          <Link class="block w-7 h-7 opacity-90 hover:opacity-100" to="https://www.facebook.com" target="_blank" rel="noopener noreferrer" title="Facebook">
-            <span class="sr-only">Facebook</span>
-              <Image width="30" class="w-full" sizes="32px" src={facebook}  alt="Facebook"/>
+          <Link className="block w-7 h-7 opacity-90 hover:opacity-100" to="https://www.facebook.com" target="_blank" rel="noopener noreferrer" title="Facebook">
+            <span className="sr-only">Facebook</span>
+              <Image width="30" className="w-full" sizes="32px" src={facebook}  alt="Facebook"/>
           </Link>
-          <Link class="block w-7 h-7 opacity-90 hover:opacity-100" to="https://youtube.com" target="_blank" rel="noopener noreferrer" title="Youtube">
-            <span class="sr-only">Youtube</span>
-              <Image width="30" class="w-full" sizes="32px" src={youtube} alt="Youtube"/>
+          <Link className="block w-7 h-7 opacity-90 hover:opacity-100" to="https://youtube.com" target="_blank" rel="noopener noreferrer" title="Youtube">
+            <span className="sr-only">Youtube</span>
+              <Image width="30" className="w-full" sizes="32px" src={youtube} alt="Youtube"/>
           </Link>
         </nav>
           </div>

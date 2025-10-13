@@ -113,7 +113,7 @@ export default function CollectionSlider({ collections = [] }) {
               <button
                 onClick={handlePrev}
                 disabled={!canScrollLeft || isTransitioning}
-                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-2 border-gray-300 flex items-center justify-center hover:bg-gray-50 hover:border-gray-400 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 transition-all duration-200 active:scale-95"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-gray-300 flex items-center justify-center hover:bg-gray-50 hover:border-gray-400 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 transition-all duration-200 active:scale-95"
                 aria-label="Previous collection"
               >
                 <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -121,7 +121,7 @@ export default function CollectionSlider({ collections = [] }) {
               <button
                 onClick={handleNext}
                 disabled={!canScrollRight || isTransitioning}
-                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-2 border-gray-300 flex items-center justify-center hover:bg-gray-50 hover:border-gray-400 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 transition-all duration-200 active:scale-95"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-gray-300 flex items-center justify-center hover:bg-gray-50 hover:border-gray-400 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 transition-all duration-200 active:scale-95"
                 aria-label="Next collection"
               >
                 <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -149,8 +149,9 @@ export default function CollectionSlider({ collections = [] }) {
                 >
                   <a
                     href={`/collections/${item.handle}`}
-                    className={`${item.bgColor} rounded-2xl sm:rounded-3xl p-6 sm:p-7 lg:p-9 min-h-[280px] sm:min-h-[320px] lg:min-h-[360px] flex flex-col justify-between relative overflow-hidden transition-all duration-300 block h-full`}
+                    className={`${item.bgColor} rounded-2xl sm:rounded-3xl p-6 sm:p-7 lg:p-9 min-h-[280px] sm:min-h-[320px] lg:min-h-[360px] flex flex-col justify-between relative overflow-hidden transition-all duration-300 group block h-full`}
                   >
+                    <span class="opacity-0 group-hover:opacity-40 absolute inset-0 bg-black/10 transition-opacity"></span>
                     {/* Content */}
                     <div className="relative z-10">
                       <p className="text-xs sm:text-sm text-gray-600 mb-2 lg:mb-3 font-medium tracking-wider">
@@ -171,7 +172,7 @@ export default function CollectionSlider({ collections = [] }) {
                         <img
                           src={item.image}  
                           alt={item.title || 'Collection image'}
-                          className="w-28 h-28 sm:w-36 sm:h-36 lg:w-40 lg:h-40 xl:w-44 xl:h-44 object-contain absolute bottom-0 right-0 opacity-85 group-hover:opacity-100 transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-2"
+                          className="w-28 h-28 sm:w-36 sm:h-36 lg:w-40 lg:h-40 xl:w-44 xl:h-44 object-contain absolute bottom-0 right-0 opacity-85 group-hover:opacity-100 transform transition-all duration-300"
                           loading="lazy"
                         />
                       )}
