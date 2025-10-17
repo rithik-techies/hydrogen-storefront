@@ -8,28 +8,36 @@ import HowToUse from '~/components/HowToUse';
 import MainBlogs from '~/components/MainBlogs';
 import banner_img from '../assets/banner_img.webp';
 import banner_img_2 from '../assets/ciseco_img_with_text_1.webp';
+import TrendingProducts from '~/components/TrendingProductComponent';
+import Testimonial from '~/components/Testimonial';
 
 /** Loader */
 export async function loader({ context }) {
-  const [collectionsRes, featuredRes, blogsRes] = await Promise.all([
+  const [collectionsRes, featuredRes, blogsRes, products] = await Promise.all([
     context.storefront.query(COLLECTIONS_QUERY, { variables: { first: 8 } }),
     context.storefront.query(FEATURED_COLLECTION_QUERY, { variables: { handle: "new-arrivals", first: 8 } }),
     context.storefront.query(LATEST_BLOGS_QUERY, { variables: { language: 'EN', blogHandle: 'news' } }),
+    context.storefront.query(TRENDING_PRODUCTS_QUERY, { variables: { first: 250 } }),
   ]);
 
   const collections = collectionsRes?.collections || null;
   const featuredCollection = featuredRes?.collection || null;
   const latestBlogs = blogsRes?.blog?.articles?.nodes || [];
+  const trendingProducts =products?.products?.nodes || [];
 
-  return { collections, featuredCollection, latestBlogs };
+
+  return { collections, featuredCollection, latestBlogs, trendingProducts };
 }
 
 /** Homepage */
 export default function Homepage() {
-  const { collections, featuredCollection, latestBlogs } = useLoaderData();
+  const { collections, featuredCollection, latestBlogs, trendingProducts } = useLoaderData();
   const handleClick = () => alert("Button clicked!");
   console.log('Featured collection:', featuredCollection);
   console.log('Latest Blogs:', latestBlogs);
+  console.log('Trending Products:', trendingProducts);
+
+
 
   return (
     <div className="home">
@@ -60,15 +68,15 @@ export default function Homepage() {
         imagePosition="left"
         background_color="yellow"
       />
-
+      <TrendingProducts  products={trendingProducts} />
       {latestBlogs.length > 0 && <MainBlogs blogs={latestBlogs} />}
+      <Testimonial/>
     </div>
   );
 }
 
 /* --- GraphQL Queries --- */
 
-// Collections & Featured Collection (same as before)
 const COLLECTIONS_QUERY = `#graphql
   fragment Collection on Collection {
     id
@@ -195,8 +203,74 @@ const LATEST_BLOGS_QUERY = `#graphql
     publishedAt
     title
     content
+    tags
     blog {
       handle
     }
   }
+`;
+
+const TRENDING_PRODUCTS_QUERY = `#graphql
+  #graphql
+query StoreProducts($first: Int!) {
+  products(first: $first, sortKey: UPDATED_AT) {
+    nodes {
+      id
+      title
+      handle
+      tags
+      description
+      featuredImage {
+        id
+        url
+        altText
+        width
+        height
+      }
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+        maxVariantPrice {
+          amount
+          currencyCode
+        }  
+      }
+      options {
+        name
+        optionValues {
+          name
+          swatch {
+            color
+            image {
+              previewImage {
+                url
+              }
+            }
+          }
+        }
+      }
+      variants(first: 10) {
+          nodes {
+            id
+            title
+            availableForSale
+            selectedOptions {
+              name
+              value
+            }
+            image {
+              url
+              altText
+            }
+            price {
+              amount
+              currencyCode
+            }
+          }
+        } 
+    }
+  }
+}
 `;

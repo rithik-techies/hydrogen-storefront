@@ -41,9 +41,10 @@ export default function HowToUse() {
   ];
 
   return (
-    <div className="mx-auto grid py-30 w-full max-w-7xl lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-6">
+    <div className="container ">
+      <div className="py-30 border-b border-t border-slate-300 grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-6">
       {steps.map((el, index) => (
-        <div key={index} className="flex flex-col items-center text-center p-4">
+        <div key={index} className="flex flex-col  items-center text-center p-4">
           <Image src={el.image} alt={el.title | "Image"} width={144} height={144} sizes="(max-width: 768px) 100px, 200px" className="w-24 h-24 mb-10" />
           <p className={`text-sm font-semibold block ${el.bgColor} rounded-full`}>
             <span className={`py-4 px-2 capitalize ${el.textColor}`}>{el.steps}</span>
@@ -52,6 +53,7 @@ export default function HowToUse() {
           <p className="text-gray-600">{el.description}</p>
         </div>
       ))}
+    </div>
     </div>
   );
 }

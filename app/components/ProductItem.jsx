@@ -14,7 +14,7 @@ import { ProductForm } from './ProductForm';
  * }}
  */
 export function ProductItem({product, loading}) {
-  const variantUrl = useVariantUrl(product.handle);
+  const variantUrl = useVariantUrl(product?.handle);
   const image = product.featuredImage;
   const variants = product?.variants?.nodes || [];
 

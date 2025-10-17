@@ -100,8 +100,8 @@ export default function CollectionSlider({ collections = [] }) {
     <div className="w-full bg-white min-h-screen flex items-center">
       <div className="w-full py-8 sm:py-12 lg:py-16">
         {/* Header */}
-        <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-8 lg:mb-12">
-          <div className=" relative flex flex-col sm:flex-row sm:items-end justify-between mb-12 lg:mb-14 text-neutral-900 dark:text-neutral-50 container">
+        <div className="container px-4 sm:px-6 lg:px-8 mb-6 sm:mb-8 lg:mb-12">
+          <div className=" relative flex flex-col sm:flex-row sm:items-end justify-between mb-12 lg:mb-14 text-neutral-900 dark:text-neutral-50 ">
             <h1 className="text-3xl md:text-4xl !m-0 font-semibold">
               Discover more.{' '}
               <span className="text-gray-500 font-normal block sm:inline mt-1 sm:mt-0">
