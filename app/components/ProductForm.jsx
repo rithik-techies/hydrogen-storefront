@@ -1,4 +1,6 @@
 import {Link, useNavigate} from 'react-router';
+import {useState} from 'react';
+import {Plus, Minus} from 'lucide-react';
 import {AddToCartButton} from './AddToCartButton';
 import {useAside} from './Aside';
 
@@ -9,18 +11,23 @@ import {useAside} from './Aside';
  * }}
  */
 export function ProductForm({productOptions, selectedVariant}) {
+  const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
   const {open} = useAside();
+
+  const handleQuantityChange = (delta) => {
+    setQuantity((prev) => Math.max(1, prev + delta));
+  };
+
   return (
     <div className="product-form">
       {productOptions.map((option) => {
-        // If there is only a single value in the option values, don't display the option
         if (option.optionValues.length === 1) return null;
 
         return (
           <div className="product-options" key={option.name}>
-            <h5>{option.name}</h5>
-            <div className="product-options-grid">
+            <h5 className='text-sm !m-0 font-medium'>{option.name}</h5>
+            <div className="flex flex-wrap gap-3 mt-3">
               {option.optionValues.map((value) => {
                 const {
                   name,
@@ -34,13 +41,9 @@ export function ProductForm({productOptions, selectedVariant}) {
                 } = value;
 
                 if (isDifferentProduct) {
-                  // SEO
-                  // When the variant is a combined listing child product
-                  // that leads to a different url, we need to render it
-                  // as an anchor tag
                   return (
                     <Link
-                      className="product-options-item"
+                      className="product-options-item relative flex items-center justify-center rounded-md border py-3 px-5 sm:px-3 text-sm font-medium uppercase sm:flex-1 cursor-pointer focus:outline-none border-gray-200  cursor-pointer bg-slate-900 border-slate-900 text-slate-100"
                       key={option.name + name}
                       prefetch="intent"
                       preventScrollReset
@@ -48,7 +51,7 @@ export function ProductForm({productOptions, selectedVariant}) {
                       to={`/products/${handle}?${variantUriQuery}`}
                       style={{
                         border: selected
-                          ? '1px solid black'
+                          ? ''
                           : '1px solid transparent',
                         opacity: available ? 1 : 0.3,
                       }}
@@ -57,22 +60,17 @@ export function ProductForm({productOptions, selectedVariant}) {
                     </Link>
                   );
                 } else {
-                  // SEO
-                  // When the variant is an update to the search param,
-                  // render it as a button with javascript navigating to
-                  // the variant so that SEO bots do not index these as
-                  // duplicated links
                   return (
                     <button
                       type="button"
-                      className={`product-options-item${
-                        exists && !selected ? ' link' : ' !text-white !bg-black'
+                      className={`${
+                        exists && !selected ? ' w-8 h-8 md:w-9 md:h-9 rounded-full link' : ' relative w-8 h-8 md:w-9 md:h-9 rounded-full ring ring-offset-1 ring-blue-500/60'
                       }`}
                       key={option.name + name}
                       style={{
                         border: selected
-                          ? '1px solid black'
-                          : '1px solid transparent',
+                          ? '1px solid transparent'
+                          : '',
                         opacity: available ? 1 : 0.3,
                       }}
                       disabled={!exists}
@@ -95,27 +93,59 @@ export function ProductForm({productOptions, selectedVariant}) {
           </div>
         );
       })}
-      <div className='inline-block transform transition-transform duration-300 hover:scale-90'> 
-      <AddToCartButton
-        disabled={!selectedVariant || !selectedVariant.availableForSale}
-        onClick={() => {
-          open('cart');
-        }}
-        lines={
-          selectedVariant
-            ? [
-                {
-                  merchandiseId: selectedVariant.id,
-                  quantity: 1,
-                  selectedVariant,
-                },
-              ]
-            : []
-        }
-      >
-        {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
-      </AddToCartButton>
-    </div>
+
+      {/* Quantity and Add to Cart */}
+      <div className="flex gap-2 sm:gap-3.5 items-stretch">
+        <div className="flex items-center justify-center bg-slate-100/70 dark:bg-slate-800/70 p-2 sm:p-3 rounded-full">
+        <div className='flex items-center justify-between gap-5'>
+          <div className='flex items-center justify-between w-[6.5rem] sm:w-28'>
+          <button
+            onClick={() => handleQuantityChange(-1)}
+            className="w-8 h-8 rounded-full flex items-center justify-center border border-neutral-400 dark:border-neutral-500 bg-white dark:bg-neutral-900 focus:outline-none hover:border-neutral-700 dark:hover:border-neutral-400 disabled:hover:border-neutral-400 dark:disabled:hover:border-neutral-500 disabled:opacity-50 disabled:cursor-default"
+            aria-label="Decrease quantity"
+            disabled={quantity === 1}
+          >
+            <Minus className="w-5 h-5 text-gray-600" />
+          </button>
+
+          <span className="px-6 text-lg font-medium text-gray-900">
+            {quantity}
+          </span>
+
+          <button
+            onClick={() => handleQuantityChange(1)}
+            className="w-8 h-8 rounded-full flex items-center justify-center border border-neutral-400 dark:border-neutral-500 bg-white dark:bg-neutral-900 focus:outline-none hover:border-neutral-700 dark:hover:border-neutral-400 disabled:hover:border-neutral-400 dark:disabled:hover:border-neutral-500 disabled:opacity-50 disabled:cursor-default"
+            aria-label="Increase quantity"
+          >
+            <Plus className="w-5 h-5 text-gray-600" />
+          </button>
+        </div>
+        </div>
+        </div>
+
+        {/* ✅ Correct AddToCartButton */}
+        <AddToCartButton
+          disabled={!selectedVariant || !selectedVariant.availableForSale}
+          lines={
+            selectedVariant
+              ? [
+                  {
+                    merchandiseId: selectedVariant.id,
+                    quantity: quantity, 
+                    selectedVariant,
+                  },
+                ]
+              : []
+          }
+          onClick={() => {
+            if (!selectedVariant) return;
+            open('cart');
+            setQuantity(1); // ✅ reset quantity after adding
+          }}
+        >
+          {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
+        </AddToCartButton>
+      </div>
     </div>
   );
 }
@@ -135,7 +165,7 @@ function ProductOptionSwatch({swatch, name}) {
   return (
     <div
       aria-label={name}
-      className="product-option-label-swatch"
+      className="w-full h-full inset-0.5 rounded-full overflow-hidden z-0"
       style={{
         backgroundColor: color || 'transparent',
       }}

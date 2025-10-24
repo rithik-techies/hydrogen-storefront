@@ -10,6 +10,7 @@ import banner_img from '../assets/banner_img.webp';
 import banner_img_2 from '../assets/ciseco_img_with_text_1.webp';
 import TrendingProducts from '~/components/TrendingProductComponent';
 import Testimonial from '~/components/Testimonial';
+import AllCollection from '~/components/AllCollection';
 
 /** Loader */
 export async function loader({ context }) {
@@ -57,7 +58,7 @@ export default function Homepage() {
         background_color="white"
         buttonText_2="Saving combo"
       />
-
+        <AllCollection collections={collections?.nodes}/>
       <Banner
         heading="Special offer in kids products"
         description="Fashion is a form of self-expression and autonomy at a particular period and place."
@@ -89,6 +90,11 @@ const COLLECTIONS_QUERY = `#graphql
       width
       height
     }
+    products(first: 250) {
+      nodes {
+        id
+      }
+    }   
   }
 
   query StoreCollections($first: Int!) {

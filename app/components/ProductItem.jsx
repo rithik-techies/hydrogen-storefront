@@ -50,7 +50,7 @@ export function ProductItem({product, loading}) {
         </Link>
         {/* Add to Cart Button - Shows on Hover */}
         {firstVariant && (
-  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 transform w-[calc(100%-2rem)] flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-10">
+  <div className="absolute bottom-0 group-hover:bottom-4 cursor-pointer inset-x-1 flex justify-center opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 ">
     <AddToCartButton
       disabled={!firstVariant || !firstVariant.availableForSale}
       onClick={() => open('cart')}

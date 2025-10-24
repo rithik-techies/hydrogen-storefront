@@ -19,7 +19,7 @@ export default function Banner({
   return (
     <div className="w-full min-h-screen relative flex items-center justify-center bg-white px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div className={`w-full max-w-7xl ${background_color ? `bg-${background_color}-50` : 'bg-white'} overflow-hidden rounded-2xl`}>
-        <div className={`flex flex-col md:flex-row ${imagePosition === "right" ? "md:flex-row-reverse" : "md:flex-row"} items-center min-h-[500px]`}>
+        <div className={`flex flex-col-reverse md:flex-row ${imagePosition === "right" ? "md:flex-row-reverse" : "md:flex-row"} items-center min-h-[500px]`}>
           
           {/* Left Side - Image */}
           {imageUrl && (
@@ -70,7 +70,7 @@ export default function Banner({
                 {buttonText && (
                   <button 
                     onClick={onButtonClick}
-                    className="bg-gray-900 hover:bg-gray-800 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg font-medium transition-all duration-300 active:scale-95"
+                    className="bg-gray-900 hover:bg-gray-800 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full text-xs sm:text-lg font-medium transition-all duration-300 active:scale-95"
                   >
                     {buttonText}
                   </button>
@@ -78,7 +78,7 @@ export default function Banner({
                 {buttonText_2 && (
                   <button 
                     onClick={onButtonClick}
-                    className="bg-transparent hover:bg-gray-100 text-gray-900 px-6 sm:px-8 py-3 border border-gray-100 sm:py-4 rounded-full text-base sm:text-lg font-medium transition-all duration-300 active:scale-95"
+                    className="bg-transparent hover:bg-gray-100 text-gray-900 px-6 sm:px-8 py-3 border border-gray-100 sm:py-4 rounded-full text-xs sm:text-lg font-medium transition-all duration-300 active:scale-95"
                   >
                     {buttonText_2}
                   </button>

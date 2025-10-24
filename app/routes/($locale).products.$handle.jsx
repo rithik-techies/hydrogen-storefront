@@ -1,4 +1,5 @@
-import {useLoaderData} from 'react-router';
+import {Link, useLoaderData} from 'react-router';
+import React, { useState } from 'react';
 import {
   getSelectedProductOptions,
   Analytics,
@@ -9,8 +10,11 @@ import {
 } from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
+import { Heart, Minus, Plus, ShoppingCart } from 'lucide-react';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import Banner from '~/components/Banner';
+import banner_img from '../assets/banner_img.webp';
 
 /**
  * @type {MetaFunction<typeof loader>}
@@ -20,7 +24,7 @@ export const meta = ({data}) => {
     {title: `Hydrogen | ${data?.product.title ?? ''}`},
     {
       rel: 'canonical',
-      href: `/products/${data?.product.handle}`,
+      to: `/products/${data?.product.handle}`,
     },
   ];
 };
@@ -86,8 +90,12 @@ function loadDeferredData({context, params}) {
 export default function Product() {
   /** @type {LoaderReturnData} */
   const {product} = useLoaderData();
+  const [quantity, setQuantity] = useState(1);
+  const [selectedColor, setSelectedColor] = useState(0);
+  const [selectedSize, setSelectedSize] = useState('SMALL');
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
-  // Optimistically selects a variant with given available variant information
+  // Optimistically selects Link variant with given available variant information
   const selectedVariant = useOptimisticVariant(
     product.selectedOrFirstAvailableVariant,
     getAdjacentAndFirstAvailableVariants(product),
@@ -104,19 +112,40 @@ export default function Product() {
   });
 
   const {title, descriptionHtml} = product;
-
+  const collectionName = product.collections?.nodes?.map(c => c.title).join(', ') || 'No Collection';
+  const collectionHandle = product.collections?.nodes?.map(c => c.handle).join(', ') || 'No Handle';
+  const handleClick = () => alert("Button clicked!");
   return (
-    <div className="product">
-     <div className="transform transition-transform duration-300 hover:scale-90">
-      <ProductImage image={selectedVariant?.image} />
-    </div>
+    <div className='product-page mt-5 lg:mt-10 pb-20 lg:pb-28 space-y-12 sm:space-y-16'>
+    <div className="product container">
+    <div className="relative bg-gray-100 rounded-2xl overflow-hidden aspect-square">
+            <button
+              onClick={() => setIsWishlisted(!isWishlisted)}
+              className="absolute top-6 right-6 z-10 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-shadow"
+            >
+              <Heart
+                className={`w-6 h-6 ${isWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-600'}`}
+              />
+            </button>
+            <div className="w-full h-full flex items-center justify-center p-8">
+              <ProductImage image={selectedVariant?.image} />
+            </div>
+          </div>
       <div className="product-main">
-        <h1 className="text-blue-500 hover:text-blue-300 ">{title}</h1>
+        <div>
+        <div className='flex items-center text-sm'>
+            <Link class="font-medium text-gray-500 hover:text-gray-900" data-discover="true" to="/">Home</Link>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="ml-2 h-5 w-5 flex-shrink-0 text-gray-300 "><path fill-rule="evenodd" d="M15.256 3.042a.75.75 0 0 1 .449.962l-6 16.5a.75.75 0 1 1-1.41-.513l6-16.5a.75.75 0 0 1 .961-.449Z" clip-rule="evenodd"></path></svg>
+          <div class="flex capitalize items-center text-sm"><Link class="font-medium text-gray-500 hover:text-gray-900" data-discover="true" to={`/collections/${collectionHandle}`}>{collectionName}</Link></div>
+        </div>
+        <h1 className="text-2xl sm:text-3xl !my-5 font-semibold ">{title}</h1>
         <ProductPrice
           price={selectedVariant?.price}
           compareAtPrice={selectedVariant?.compareAtPrice}
         />
+        </div>
         <br />
+        
         <ProductForm
           productOptions={productOptions}
           selectedVariant={selectedVariant}
@@ -146,6 +175,17 @@ export default function Product() {
         }}
       />
     </div>
+     <Banner
+      heading="Special offer in kids products"
+      description="Fashion is a form of self-expression and autonomy at a particular period and place."
+      buttonText="Discover more"
+      imageUrl={banner_img}
+      imageAlt="Kid with skateboard"
+      onButtonClick={handleClick}
+      imagePosition="left"
+      background_color="yellow"
+    />
+    </div>
   );
 }
 
@@ -157,7 +197,7 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
       currencyCode
     }
     id
-    image {
+    image{
       __typename
       id
       url
@@ -222,6 +262,13 @@ const PRODUCT_FRAGMENT = `#graphql
     seo {
       description
       title
+    }
+      collections(first: 1) {
+      nodes {
+        id
+        title
+        handle
+      }
     }
   }
   ${PRODUCT_VARIANT_FRAGMENT}

@@ -58,7 +58,7 @@ export default function SlideShow() {
                 <div className="absolute"></div>
               </div>
               <div className="relative  h-full">
-                <div className="mx-auto h-full px-4 sm:px-6 lg:px-8 xl:px-12 max-w-7xl">
+                <div className="mx-auto h-full px-4 sm:px-6 lg:px-8 xl:px-12 container">
                   <div className="flex items-center h-full">
                     
                     <div className="w-full md:w-3/5 lg:w-3/5 py-12 md:py-6">
