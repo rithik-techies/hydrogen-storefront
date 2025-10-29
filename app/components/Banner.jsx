@@ -18,7 +18,7 @@ export default function Banner({
 }) {
   return (
     <div className="w-full min-h-screen relative flex items-center justify-center bg-white px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      <div className={`w-full max-w-7xl ${background_color ? `bg-${background_color}-50` : 'bg-white'} overflow-hidden rounded-2xl`}>
+      <div className={`w-full max-w-7xl ${background_color ? `bg-${background_color}-50` : 'bg-white'} overflow-visible rounded-2xl`}>
         <div className={`flex flex-col-reverse md:flex-row ${imagePosition === "right" ? "md:flex-row-reverse" : "md:flex-row"} items-center min-h-[500px]`}>
           
           {/* Left Side - Image */}

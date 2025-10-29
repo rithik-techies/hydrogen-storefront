@@ -10,7 +10,7 @@ import {
 } from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
-import { Heart, Minus, Plus, ShoppingCart } from 'lucide-react';
+import { Heart, Minus, Plus, ShoppingCart, Truck, RotateCcw, XCircle, DollarSign, ArrowUpRight } from 'lucide-react';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import Banner from '~/components/Banner';
@@ -87,6 +87,86 @@ function loadDeferredData({context, params}) {
   return {};
 }
 
+function Policies() {
+  const policies = [
+    {
+      id: 'shipping',
+      title: 'Shipping Policy',
+      description: 'Read our shipping policy to learn more abou...',
+      icon: Truck,
+      link:"/policies/shipping-policy",
+      bgColor: 'bg-pink-50',
+      iconColor: 'text-gray-800'
+    },
+    {
+      id: 'T&S',
+      title: 'Terms of services',
+      description: 'Read our Terms of services to learn more about...',
+      icon: RotateCcw,
+      link:"/policies/terms-of-service",
+      bgColor: 'bg-blue-50',
+      iconColor: 'text-gray-800'
+    },
+    {
+      id: 'Privacy',
+      title: 'Privacy policy',
+      description: 'Read our Privacy policy policy to learn more...',
+      icon: XCircle,
+      link:"/policies/privacy-policy",
+      bgColor: 'bg-green-50',
+      iconColor: 'text-gray-800'
+    },
+    {
+      id: 'refunds',
+      title: 'Refunds policy',
+      description: 'Read our refund policy to learn more about...',
+      icon: DollarSign,
+      link:"/policies/refund-policy",
+      bgColor: 'bg-yellow-50',
+      iconColor: 'text-gray-800'
+    }
+  ];
+
+  return (
+    
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 relative ">
+        {policies.map((policy) => {
+          const IconComponent = policy.icon;
+          return (
+            <Link
+              key={policy.id}
+              to={policy.link}
+              className={`${policy.bgColor} relative flex flex-col p-5 rounded-2xl dark:bg-opacity-90 group`}
+            >
+              {/* Icon */}
+                <IconComponent 
+                  className={`${policy.iconColor}`} 
+                  strokeWidth={1.5}
+                />
+
+              {/* Content */}
+              <div className="space-y-2 mt-4">
+                <h3 className="text-xl sm:text-2xl !m-0 font-semibold text-gray-900">
+                  {policy.title}
+                </h3>
+                <p className="text-slate-500 mt-1 text-sm line-clamp-1">
+                  {policy.description}
+                </p>
+              </div>
+
+              {/* Arrow Icon */}
+              <div className="absolute top-5 end-5 group-hover:scale-110 group-hover:opacity-100 opacity-60 transition-all">
+                <ArrowUpRight 
+                  className="w-5 h-5" 
+                  strokeWidth={2}
+                />
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+  );
+}
 export default function Product() {
   /** @type {LoaderReturnData} */
   const {product} = useLoaderData();
@@ -94,6 +174,8 @@ export default function Product() {
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedSize, setSelectedSize] = useState('SMALL');
   const [isWishlisted, setIsWishlisted] = useState(false);
+
+  console.log(product)
 
   // Optimistically selects Link variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -115,13 +197,15 @@ export default function Product() {
   const collectionName = product.collections?.nodes?.map(c => c.title).join(', ') || 'No Collection';
   const collectionHandle = product.collections?.nodes?.map(c => c.handle).join(', ') || 'No Handle';
   const handleClick = () => alert("Button clicked!");
+
   return (
-    <div className='product-page mt-5 lg:mt-10 pb-20 lg:pb-28 space-y-12 sm:space-y-16'>
-    <div className="product container">
-    <div className="relative bg-gray-100 rounded-2xl overflow-hidden aspect-square">
+    <>
+    <div className='product-page mt-5 container lg:mt-10 pb-20 lg:pb-28 space-y-12 sm:space-y-16'>
+    <div className="lg:flex">
+    <div className="relative bg-gray-100 rounded-2xl lg:w-[55%] overflow-hidden aspect-square">
             <button
               onClick={() => setIsWishlisted(!isWishlisted)}
-              className="absolute top-6 right-6 z-10 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-shadow"
+              className="absolute top-6 right-6 z-0 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-shadow"
             >
               <Heart
                 className={`w-6 h-6 ${isWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-600'}`}
@@ -131,7 +215,7 @@ export default function Product() {
               <ProductImage image={selectedVariant?.image} />
             </div>
           </div>
-      <div className="product-main">
+      <div className="product-main lg:w-[45%] pt-10 lg:pt-0 lg:pl-7 xl:pl-9 2xl:pl-10">
         <div>
         <div className='flex items-center text-sm'>
             <Link class="font-medium text-gray-500 hover:text-gray-900" data-discover="true" to="/">Home</Link>
@@ -152,13 +236,7 @@ export default function Product() {
         />
         <br />
         <br />
-        <p>
-          <strong className='text-2xl'>Description</strong>
-        </p> 
-        <br />
-        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
-        <br />
-      </div>
+       <Policies/>
       <Analytics.ProductView
         data={{
           products: [
@@ -175,6 +253,19 @@ export default function Product() {
         }}
       />
     </div>
+    </div>
+       {descriptionHtml && (
+          <div className="mt-12 sm:mt-16">
+            <div>
+              <h2 className="text-2xl font-semibold">Product Details</h2>
+            </div>
+            <div
+              className="!prose !prose-sm sm:!prose !dark:prose-invert sm:max-w-4xl mt-7"
+              dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+            />
+          </div>
+        )}
+    </div>
      <Banner
       heading="Special offer in kids products"
       description="Fashion is a form of self-expression and autonomy at a particular period and place."
@@ -185,7 +276,7 @@ export default function Product() {
       imagePosition="left"
       background_color="yellow"
     />
-    </div>
+    </>
   );
 }
 
@@ -212,6 +303,15 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
     product {
       title
       handle
+      images(first: 250) {
+        nodes {
+          id
+          url
+          altText
+          width
+          height
+        }
+      }
     }
     selectedOptions {
       name

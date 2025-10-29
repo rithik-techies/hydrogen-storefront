@@ -31,8 +31,9 @@ export function CartLineItem({layout, line}) {
         />
       )}
 
-      <div>
+      <div className='w-[-webkit-fill-available]'>
         <Link
+        className='flex justify-between'
           prefetch="intent"
           to={lineItemUrl}
           onClick={() => {
@@ -44,13 +45,13 @@ export function CartLineItem({layout, line}) {
           <p>
             <strong>{product.title}</strong>
           </p>
-        </Link>
-        <ProductPrice price={line?.cost?.totalAmount} />
-        <ul>
+          <ProductPrice price={line?.cost?.totalAmount} />
+        </Link> 
+        <ul className='flex'>
           {selectedOptions.map((option) => (
-            <li key={option.name}>
+            <li className='pe-4' key={option.name}>
               <small>
-                {option.name}: {option.value}
+                {option.value}
               </small>
             </li>
           ))}
@@ -74,9 +75,9 @@ function CartLineQuantity({line}) {
   const nextQuantity = Number((quantity + 1).toFixed(0));
 
   return (
-    <div className="cart-line-quantity">
-      <small>Quantity: {quantity} &nbsp;&nbsp;</small>
-      <CartLineUpdateButton lines={[{id: lineId, quantity: prevQuantity}]}>
+    <div className="cart-line-quantity flex justify-between">
+      <p className='text-slate-500 dark:text-slate-400'>Qty {quantity} &nbsp;&nbsp;</p>
+      {/* <CartLineUpdateButton lines={[{id: lineId, quantity: prevQuantity}]}>
         <button
           aria-label="Decrease quantity"
           disabled={quantity <= 1 || !!isOptimistic}
@@ -96,7 +97,7 @@ function CartLineQuantity({line}) {
         >
           <span>&#43;</span>
         </button>
-      </CartLineUpdateButton>
+      </CartLineUpdateButton> */}
       &nbsp;
       <CartLineRemoveButton lineIds={[lineId]} disabled={!!isOptimistic} />
     </div>
@@ -120,7 +121,7 @@ function CartLineRemoveButton({lineIds, disabled}) {
       action={CartForm.ACTIONS.LinesRemove}
       inputs={{lineIds}}
     >
-      <button disabled={disabled} type="submit">
+      <button className='font-medium text-blue-600 hover:text-blue-700 disabled:text-slate-600' disabled={disabled} type="submit">
         Remove
       </button>
     </CartForm>

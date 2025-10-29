@@ -74,8 +74,10 @@ export function Footer({ footer: footerPromise }) {
                 {/* Column 5 - Newsletter */}
              
               </div>
+              <div className='mt-10 xl:mt-0'>
                <div className="flex flex-col gap-3col-span-2 md:col-span-3 mt-2 sm:mt-4 md:mt-6 lg:mt-0 lg:col-span-1 border rounded-2xl border-gray-200">
-                <div className="flex p-4 items-center gap-2 mb-1 ">
+               <div className='nc-WidgetHeading1 flex items-center justify-between p-4 border-b border-neutral-100 '>
+                <h2 className="flex !m-0 flex-wrap gap-3 text-base font-semibold text-neutral-900 dark:text-neutral-100">
                   <svg
                     className="w-6 h-6 text-gray-900"
                     fill="none"
@@ -89,16 +91,18 @@ export function Footer({ footer: footerPromise }) {
                       d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                     />
                   </svg>
-                  <h3 className="font-semibold text-gray-900 text-sm">
+                  <span>
                     Stay up to date
-                  </h3>
+                  </span>
+                </h2>
                 </div>
                 <div className='p-4  border-t border-gray-300'>
-                <p className="text-gray-600  text-sm leading-relaxed ">
+                <p className="mt-2 text-sm leading-6 text-neutral-600 dark:text-neutral-400 ">
                   Subscribe to our newsletter to get the latest updates and special offers.
                 </p>
                 </div>
-                  <NewsletterForm/>
+                 <NewsletterForm/>
+              </div>
               </div>
               </div>
            
@@ -164,26 +168,28 @@ function NewsletterForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="relative mt-1 p-4">
+    <div>
+    <form onSubmit={handleSubmit} className="relative p-4">
       <input
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Enter your email address"
-        className="w-full px-4 py-3 pr-12 border !border-gray-200 !rounded-2xl text-sm !focus:outline-none !focus:ring-2 !focus:ring-blue-100 focus:border-transparent transition-all bg-white"
+        className="block w-full border border-gray-200 hover:ring hover:ring-primary-200/50 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white disabled:bg-gray-200 rounded-2xl text-sm font-normal h-11 px-4 py-3 rounded-2xl"
         required
       />
       <button
         type="submit"
-        className="absolute !right-2 top-1/2 -translate-y-1/2 bg-black text-white rounded-full p-2 hover:bg-gray-800 transition-colors"
+        className="absolute me-3 !right-2 top-1/2 -translate-y-1/2 bg-black text-white rounded-full p-2 hover:bg-gray-800 transition-colors"
         aria-label="Subscribe"
       >
-        <ArrowRight className="w-5 h-5" />
+        <ArrowRight className="w-5 h-5 " />
       </button>
       {isSubmitted && (
         <p className="text-green-600 text-xs mt-2">Thank you for subscribing!</p>
       )}
     </form>
+    </div>
   );
 }
 

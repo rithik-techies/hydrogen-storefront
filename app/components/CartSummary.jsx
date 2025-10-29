@@ -6,12 +6,11 @@ import {useRef} from 'react';
  */
 export function CartSummary({cart, layout}) {
   const className =
-    layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside';
+    layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside grid gap-4 py-6 border-t border-slate-100 flex-shrink-0 mt-auto';
 
   return (
-    <div aria-labelledby="cart-summary" className={className}>
-      <h4>Totals</h4>
-      <dl className="cart-subtotal">
+    <div aria-labelledby="cart-summary " className={className}>
+      <dl className="cart-subtotal !m-0 flex justify-between text-base font-medium text-gray-900">
         <dt>Subtotal</dt>
         <dd>
           {cart.cost?.subtotalAmount?.amount ? (
@@ -21,9 +20,21 @@ export function CartSummary({cart, layout}) {
           )}
         </dd>
       </dl>
-      <CartDiscounts discountCodes={cart.discountCodes} />
-      <CartGiftCard giftCardCodes={cart.appliedGiftCards} />
-      <CartCheckoutActions checkoutUrl={cart.checkoutUrl} />
+      <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
+      <div className="grid grid-cols-2 gap-2 mt-5">
+        <a className="relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 lg:py-3.5 lg:px-7  bg-white text-slate-700 hover:bg-gray-100 flex-1 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 dark:focus:ring-offset-0" data-discover="true" href="/cart" target="_self">View cart</a>
+          <CartCheckoutActions checkoutUrl={cart.checkoutUrl} />
+      </div>
+      {/* <CartDiscounts discountCodes={cart.discountCodes} />
+      <CartGiftCard giftCardCodes={cart.appliedGiftCards} /> */}
+      <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
+        <p>or {' '}
+          <button type="button" class="font-medium text-blue-600 hover:text-blue-500">Continue Shopping
+            <span> →</span>
+          </button>
+        </p>
+        </div>
+      
     </div>
   );
 }
@@ -34,12 +45,9 @@ function CartCheckoutActions({checkoutUrl}) {
   if (!checkoutUrl) return null;
 
   return (
-    <div>
-      <a href={checkoutUrl} target="_self">
-        <p>Continue to Checkout &rarr;</p>
+      <a className='flex' href={checkoutUrl} target="_self">
+       <button className="relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 lg:py-3.5 lg:px-8  bg-slate-900 text-slate-50 shadow-xl hover:bg-slate-800 disabled:bg-opacity-90 flex-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 dark:focus:ring-offset-0" type="button">Check out</button>
       </a>
-      <br />
-    </div>
   );
 }
 

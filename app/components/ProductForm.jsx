@@ -1,5 +1,5 @@
 import {Link, useNavigate} from 'react-router';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Plus, Minus} from 'lucide-react';
 import {AddToCartButton} from './AddToCartButton';
 import {useAside} from './Aside';
@@ -19,14 +19,20 @@ export function ProductForm({productOptions, selectedVariant}) {
     setQuantity((prev) => Math.max(1, prev + delta));
   };
 
+  // Optional: Reset quantity when variant changes
+  useEffect(() => {
+    setQuantity(1);
+  }, [selectedVariant?.id]);
+
   return (
     <div className="product-form">
+      {/* ===== Product Options ===== */}
       {productOptions.map((option) => {
         if (option.optionValues.length === 1) return null;
 
         return (
           <div className="product-options" key={option.name}>
-            <h5 className='text-sm !m-0 font-medium'>{option.name}</h5>
+            <h5 className="text-sm !m-0 font-medium">{option.name}</h5>
             <div className="flex flex-wrap gap-3 mt-3">
               {option.optionValues.map((value) => {
                 const {
@@ -43,16 +49,14 @@ export function ProductForm({productOptions, selectedVariant}) {
                 if (isDifferentProduct) {
                   return (
                     <Link
-                      className="product-options-item relative flex items-center justify-center rounded-md border py-3 px-5 sm:px-3 text-sm font-medium uppercase sm:flex-1 cursor-pointer focus:outline-none border-gray-200  cursor-pointer bg-slate-900 border-slate-900 text-slate-100"
+                      className="product-options-item relative flex items-center justify-center rounded-md border py-3 px-5 sm:px-3 text-sm font-medium uppercase sm:flex-1 cursor-pointer focus:outline-none border-gray-200 bg-slate-900 border-slate-900 text-slate-100"
                       key={option.name + name}
                       prefetch="intent"
                       preventScrollReset
                       replace
                       to={`/products/${handle}?${variantUriQuery}`}
                       style={{
-                        border: selected
-                          ? ''
-                          : '1px solid transparent',
+                        border: selected ? '' : '1px solid transparent',
                         opacity: available ? 1 : 0.3,
                       }}
                     >
@@ -63,14 +67,14 @@ export function ProductForm({productOptions, selectedVariant}) {
                   return (
                     <button
                       type="button"
-                      className={`${
-                        exists && !selected ? ' w-8 h-8 md:w-9 md:h-9 rounded-full link' : ' relative w-8 h-8 md:w-9 md:h-9 rounded-full ring ring-offset-1 ring-blue-500/60'
-                      }`}
                       key={option.name + name}
+                      className={`${
+                        exists && !selected
+                          ? 'w-8 h-8 md:w-9 md:h-9 rounded-full link'
+                          : 'relative w-8 h-8 md:w-9 md:h-9 rounded-full ring-3 ring-offset-1 ring-blue-500/60'
+                      }`}
                       style={{
-                        border: selected
-                          ? '1px solid transparent'
-                          : '',
+                        border: selected ? '1px solid transparent' : '',
                         opacity: available ? 1 : 0.3,
                       }}
                       disabled={!exists}
@@ -94,57 +98,57 @@ export function ProductForm({productOptions, selectedVariant}) {
         );
       })}
 
-      {/* Quantity and Add to Cart */}
+      {/* ===== Quantity & Add to Cart ===== */}
       <div className="flex gap-2 sm:gap-3.5 items-stretch">
-        <div className="flex items-center justify-center bg-slate-100/70 dark:bg-slate-800/70 p-2 sm:p-3 rounded-full">
-        <div className='flex items-center justify-between gap-5'>
-          <div className='flex items-center justify-between w-[6.5rem] sm:w-28'>
+        {/* Quantity Selector */}
+        <div className="flex items-center gap-3 bg-slate-100/70 dark:bg-slate-800/70 px-3 py-2 rounded-full">
           <button
+            type="button"
             onClick={() => handleQuantityChange(-1)}
-            className="w-8 h-8 rounded-full flex items-center justify-center border border-neutral-400 dark:border-neutral-500 bg-white dark:bg-neutral-900 focus:outline-none hover:border-neutral-700 dark:hover:border-neutral-400 disabled:hover:border-neutral-400 dark:disabled:hover:border-neutral-500 disabled:opacity-50 disabled:cursor-default"
-            aria-label="Decrease quantity"
             disabled={quantity === 1}
+            aria-label="Decrease quantity"
+            className="w-8 h-8 rounded-full flex items-center justify-center border border-neutral-400 dark:border-neutral-500 bg-white dark:bg-neutral-900 hover:border-neutral-700 disabled:opacity-50"
           >
             <Minus className="w-5 h-5 text-gray-600" />
           </button>
 
-          <span className="px-6 text-lg font-medium text-gray-900">
+          <span className="text-lg font-medium text-gray-900 w-8 text-center">
             {quantity}
           </span>
 
           <button
+            type="button"
             onClick={() => handleQuantityChange(1)}
-            className="w-8 h-8 rounded-full flex items-center justify-center border border-neutral-400 dark:border-neutral-500 bg-white dark:bg-neutral-900 focus:outline-none hover:border-neutral-700 dark:hover:border-neutral-400 disabled:hover:border-neutral-400 dark:disabled:hover:border-neutral-500 disabled:opacity-50 disabled:cursor-default"
             aria-label="Increase quantity"
+            className="w-8 h-8 rounded-full flex items-center justify-center border border-neutral-400 dark:border-neutral-500 bg-white dark:bg-neutral-900 hover:border-neutral-700"
           >
             <Plus className="w-5 h-5 text-gray-600" />
           </button>
         </div>
-        </div>
-        </div>
-
-        {/* ✅ Correct AddToCartButton */}
+          <div className='flex-1 *:h-full *:flex'>
+        {/* Add to Cart Button (fixed quantity) */}
         <AddToCartButton
           disabled={!selectedVariant || !selectedVariant.availableForSale}
-          lines={
-            selectedVariant
-              ? [
-                  {
-                    merchandiseId: selectedVariant.id,
-                    quantity: quantity, 
-                    selectedVariant,
-                  },
-                ]
-              : []
-          }
+          lines={[
+            {
+              merchandiseId: selectedVariant?.id,
+              quantity:quantity, // ✅ live quantity from state
+               selectedVariant,
+            },
+          ]}
           onClick={() => {
             if (!selectedVariant) return;
+            console.log('Adding to cart with quantity:', quantity);
             open('cart');
-            setQuantity(1); // ✅ reset quantity after adding
           }}
+          onSuccess={() => {
+            setQuantity(1);
+          }}
+          className="relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 lg:py-3.5 lg:px-8  bg-slate-900 text-slate-50 shadow-xl hover:bg-slate-800 disabled:bg-opacity-90 w-full h-full flex items-center justify-center gap-3  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-600 dark:focus:ring-offset-0"
         >
           {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
         </AddToCartButton>
+        </div>
       </div>
     </div>
   );

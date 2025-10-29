@@ -415,7 +415,7 @@ const showProduct = sortedProducts.slice(0, 8);
           <p className="mt-2 md:mt-3 font-normal block text-base sm:text-xl text-neutral-500">Discover the most trending products in Ciseco.</p>
         </div>
         {/* Desktop Filters Bar */}
-        <div className="hidden md:flex items-center border-b border-slate-200 pb-8 gap-3 mb-8 flex-wrap relative" ref={dropdownRef}>
+        <div className="hidden lg:flex items-center border-b border-slate-200 pb-8 gap-3 mb-8 flex-wrap relative" ref={dropdownRef}>
           {/* Availability Filter */}
           <div className="relative">
             <button 
@@ -618,7 +618,7 @@ const showProduct = sortedProducts.slice(0, 8);
   </div>
 
         {/* Mobile Filter/Sort Bar */}
-        <div className="md:hidden flex items-center justify-between gap-3 mb-6">
+        <div className="lg:hidden flex items-center justify-between gap-3 mb-6">
             <button
               onClick={() => setShowMobileFilters(true)}
               className="relative flex gap-2 items-center justify-center px-4 py-2 text-sm rounded-full focus:outline-none select-none border border-neutral-300 text-neutral-700 hover:border-neutral-500 focus:border-neutral-500"
@@ -650,7 +650,7 @@ const showProduct = sortedProducts.slice(0, 8);
 
         {/* Mobile Filter Modal */}
         {showMobileFilters && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden">
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden">
             <div className="absolute right-0 top-0 bottom-0 w-full max-w-md bg-white overflow-y-auto">
               <MobileFilterContent />
             </div>

@@ -124,7 +124,7 @@ function ShopDropdown() {
                 <>
                     {/* Backdrop for mobile and desktop */}
                     <div
-                        className="fixed inset-0 z-40"
+                        className="fixed inset-0 z-50"
                         onClick={() => setIsOpen(false)}
                     />
 
@@ -334,7 +334,7 @@ const sections = Object.fromEntries(MENU_SECTIONS.map(s => [s.title, s.links]));
 function HeaderCtas({isLoggedIn, cart}) {
   return (
     <nav className="header-ctas ml-0 sm:ml-auto flex items-center gap-2 md:gap-3" role="navigation">
-        <Link className='hidden md:block' to="/search"><SearchToggle/></Link>
+        <div className='hidden md:block'><SearchToggle/></div>
       <NavLink prefetch="intent" to="/account" style={activeLinkStyle} className="flex-shrink-0">
         <Suspense fallback={null}>
           <Await resolve={isLoggedIn} errorElement={null}>
@@ -365,9 +365,11 @@ function HeaderMenuMobileToggle() {
 
 function SearchToggle() {
   return (
-    <button className="reset flex-shrink-0">
+    <Link to="/search">
+    <button className="reset flex-shrink-0 rounded-full cursor-pointer text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none">
       <svg className="w-5 h-5 sm:w-6 sm:h-6" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path><path d="M22 22L20 20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path></svg>
     </button>
+    </Link>
   );
 }
 
@@ -380,7 +382,7 @@ function CartBadge({count}) {
 
   return (
     <a
-      className='relative inline-block flex-shrink-0'
+      className='relative inline-block flex-shrink-0 rounded-full text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none'
       href="/cart"
       onClick={(e) => {
         e.preventDefault();

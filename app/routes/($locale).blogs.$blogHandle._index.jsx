@@ -30,7 +30,7 @@ export async function loader(args) {
  */
 async function loadCriticalData({context, request, params}) {
   const paginationVariables = getPaginationVariables(request, {
-    pageBy: 4,
+    pageBy: 10,
   });
 
   if (!params.blogHandle) {
@@ -72,10 +72,21 @@ export default function Blog() {
   const {articles} = blog;
 
   return (
-    <div className="blog">
-      <h1>{blog.title}</h1>
+    <div className="page-news pt-16 lg:pt-24 pb-20 lg:pb-28 xl:pb-32 space-y-20 sm:space-y-24 lg:space-y-28">
+      <div className='container'>
+      <div className='flex flex-col justify-center items-center'>
+        <div className='max-w-screen-sm text-center'>
+      <h1 className='block text-2xl !m-0 sm:text-3xl lg:text-4xl font-semibold capitalize'>{blog.title}</h1>
+        </div>
+        <div className='block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-400 mt-3 lg:mt-5'>
+          <Link className='hover:text-slate-900 hover:underline' to={'/'}>Home</Link>
+          <span className="text-xs mx-1 sm:mx-1.5">/</span>
+          <span className='underline'>{blog.title}</span>
+        </div>
+      </div>
+      <hr className="mt-16 border border-gray-200 "></hr>
       <div className="blog-grid">
-        <PaginatedResourceSection connection={articles}>
+        <PaginatedResourceSection resourcesClassName={'mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3'} connection={articles}>
           {({node: article, index}) => (
             <ArticleItem
               article={article}
@@ -85,6 +96,7 @@ export default function Blog() {
           )}
         </PaginatedResourceSection>
       </div>
+    </div>
     </div>
   );
 }
@@ -97,30 +109,55 @@ export default function Blog() {
  */
 function ArticleItem({article, loading}) {
   const publishedAt = new Intl.DateTimeFormat('en-US', {
+    weekday: 'short',
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
   }).format(new Date(article.publishedAt));
+
   return (
-    <div className="blog-article" key={article.id}>
-      <Link to={`/blogs/${article.blog.handle}/${article.handle}`}>
+    <div className="flex flex-col items-start justify-between ">
+      <Link to={`/blogs/${article.blog.handle}/${article.handle}`} className="flex flex-col h-full">
         {article.image && (
-          <div className="blog-article-image">
+          <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden mb-4">
             <Image
               alt={article.image.altText || article.title}
-              aspectRatio="3/2"
+              aspectRatio="4/3"
               data={article.image}
               loading={loading}
-              sizes="(min-width: 768px) 50vw, 100vw"
+              sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+              className=" bg-gray-100 object-cover w-full h-full hover:opacity-80 transition-opacity"
             />
           </div>
         )}
-        <h3>{article.title}</h3>
-        <small>{publishedAt}</small>
+        
+        <div className="flex flex-col flex-grow">
+          <div className="flex items-center gap-3 mb-3 text-sm">
+            <div className='mt-8 flex flex-wrap items-center gap-2 sm:gap-x-4 text-xs'>
+            <time className="text-gray-600">{publishedAt}</time>
+            {article.tags && article.tags.length > 0 && (
+              <>
+                <span className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600">{article.tags}</span>
+              </>
+            )}
+            </div>
+          </div>
+          
+          <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+            {article.title}
+          </h3>
+          
+          {article.content && (
+            <p className="!mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
+              {article.content}
+            </p>
+          )}
+        </div>
       </Link>
     </div>
   );
 }
+
 
 // NOTE: https://shopify.dev/docs/api/storefront/latest/objects/blog
 const BLOGS_QUERY = `#graphql
@@ -175,6 +212,8 @@ const BLOGS_QUERY = `#graphql
     }
     publishedAt
     title
+    content
+    tags
     blog {
       handle
     }

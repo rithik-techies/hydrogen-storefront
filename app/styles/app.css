@@ -1,5 +1,5 @@
 :root {
-  --aside-width: 400px;
+  --aside-width: 32rem;
   --cart-aside-summary-height-with-discount: 300px;
   --cart-aside-summary-height: 250px;
   --grid-item-width: 355px;
@@ -466,7 +466,6 @@ button.reset:hover:not(:has(> *)) {
   display: grid;
   @media (min-width: 45em) {
     grid-template-columns: 1fr 1fr;
-    grid-gap: 4rem;
   }
 }
 
