@@ -15,6 +15,7 @@ import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import Banner from '~/components/Banner';
 import banner_img from '../assets/banner_img.webp';
+import FeaturedCollection from '~/components/FeaturedCollection';
 
 /**
  * @type {MetaFunction<typeof loader>}
@@ -175,7 +176,13 @@ export default function Product() {
   const [selectedSize, setSelectedSize] = useState('SMALL');
   const [isWishlisted, setIsWishlisted] = useState(false);
 
-  console.log(product)
+  const relatedProducts = product?.metafield?.references?.nodes || [];
+    const relatedCollection = {
+      title: 'Customer also purchased',
+      products: {
+        nodes: relatedProducts,
+      },
+  };
 
   // Optimistically selects Link variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -266,6 +273,10 @@ export default function Product() {
           </div>
         )}
     </div>
+    {relatedCollection?.products?.nodes?.length > 0 && (
+      <FeaturedCollection collection={relatedCollection} />
+    )}
+
      <Banner
       heading="Special offer in kids products"
       description="Fashion is a form of self-expression and autonomy at a particular period and place."
@@ -288,7 +299,7 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
       currencyCode
     }
     id
-    image{
+    image {
       __typename
       id
       url
@@ -353,21 +364,52 @@ const PRODUCT_FRAGMENT = `#graphql
         }
       }
     }
-    selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
+    selectedOrFirstAvailableVariant(
+      selectedOptions: $selectedOptions
+      ignoreUnknownOptions: true
+      caseInsensitiveMatch: true
+    ) {
       ...ProductVariant
     }
-    adjacentVariants (selectedOptions: $selectedOptions) {
+    adjacentVariants(selectedOptions: $selectedOptions) {
       ...ProductVariant
     }
     seo {
       description
       title
     }
-      collections(first: 1) {
+    collections(first: 1) {
       nodes {
         id
         title
         handle
+      }
+    }
+    metafield(
+      namespace: "shopify--discovery--product_recommendation"
+    key: "related_products"
+  ) {
+      type
+      references(first: 10) {
+        nodes {
+          ... on Product {
+            id
+            title
+            handle
+            featuredImage {
+              url
+              altText
+              width
+              height
+            }
+            priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+          }
+        }
       }
     }
   }

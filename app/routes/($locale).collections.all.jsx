@@ -1,4 +1,4 @@
-import {useLoaderData} from 'react-router';
+import {Link, useLoaderData} from 'react-router';
 import {getPaginationVariables} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {ProductItem} from '~/components/ProductItem';
@@ -58,11 +58,31 @@ export default function Collection() {
   const {products} = useLoaderData();
 
   return (
-    <div className="collection">
-      <h1>Products</h1>
+    <div className="collection container pt-16 lg:pt-24 pb-20 lg:pb-28 xl:pb-32">
+        <div className="mx-auto">
+              {/* Breadcrumb */}
+              <div className="flex items-center text-sm font-medium gap-2 text-neutral-500 mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 0 0 .495-7.468 5.99 5.99 0 0 0-1.925 3.547 5.975 5.975 0 0 1-2.133-1.001A3.75 3.75 0 0 0 12 18Z"></path></svg>
+                <span className="text-neutral-700 ">All Products</span>
+              </div>
+      
+              {/* Page Title */}
+              <h1 className="block text-2xl !m-0 sm:text-3xl lg:text-4xl font-semibold capitalize">
+                All Products
+              </h1>
+      
+              {/* Breadcrumb Navigation */}
+              <div className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-400 mt-3 lg:mt-5">
+                <Link to="/" className="hover:text-slate-900 hover:underline">Home</Link>
+                <span className='text-xs mx-1 sm:mx-1.5'>/</span>
+                <span className=" underline ">All Products</span>
+              </div>
+            </div>
+         <div className="border-t  lg:border-l border-slate-200 dark:border-slate-700 my-10 "></div>
+       
       <PaginatedResourceSection
         connection={products}
-        resourcesClassName="products-grid"
+        resourcesClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
       >
         {({node: product, index}) => (
           <ProductItem
@@ -91,6 +111,39 @@ const COLLECTION_ITEM_FRAGMENT = `#graphql
       url
       width
       height
+    }
+       options {
+      name
+      optionValues {
+        name
+        swatch {
+          color
+          image {
+            previewImage {
+              url
+            }
+          }
+        }
+      }
+    }
+    variants(first: 250) {
+      nodes {
+        id
+        title
+        availableForSale
+        selectedOptions {
+          name
+          value
+        }
+        image {
+          url
+          altText
+        }
+        price {
+          amount
+          currencyCode
+        }
+      }
     }
     priceRange {
       minVariantPrice {

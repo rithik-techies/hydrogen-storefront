@@ -3,6 +3,9 @@ import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
 import {SearchForm} from '~/components/SearchForm';
 import {SearchResults} from '~/components/SearchResults';
 import {getEmptyPredictiveSearchResult} from '~/lib/search';
+import { ArrowRight } from 'lucide-react';
+import banner_img_2 from '../assets/ciseco_img_with_text_1.webp';
+import Banner from '~/components/Banner';
 
 /**
  * @type {MetaFunction}
@@ -33,29 +36,38 @@ export async function loader({request, context}) {
  * Renders the /search route
  */
 export default function SearchPage() {
+  const handleClick = () => alert("Button clicked!");
   /** @type {LoaderReturnData} */
   const {type, term, result, error} = useLoaderData();
   if (type === 'predictive') return null;
 
   return (
-    <div className="search">
-      <h1>Search</h1>
-      <SearchForm>
+    <div className="search pb-20 lg:pb-28 xl:pb-32">
+  <div className="nc-HeadBackgroundCommon h-24 2xl:h-28 top-0 left-0 right-0 w-full bg-[#f0f9ff] dark:bg-neutral-800/20"></div>
+  <div className='space-y-20 sm:space-y-24 lg:space-y-28'>
+      <div className='container'>
+        <div className='max-w-2xl mx-auto relative -mt-9 flex flex-col'>
+        <SearchForm>
         {({inputRef}) => (
           <>
             <input
               defaultValue={term}
               name="q"
-              placeholder="Search…"
+              placeholder="Type your keywords"
               ref={inputRef}
               type="search"
+              className='block w-full border-neutral-200 hover:ring hover:ring-blue-200/50 focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white disabled:bg-neutral-200 rounded-full text-sm font-normal pl-14 py-5 pr-5 md:pl-16 shadow-lg border-0 dark:border'
             />
             &nbsp;
-            <button type="submit">Search</button>
+            <button className='flex items-center justify-center rounded-full bg-slate-900 !leading-none text-slate-50 hover:bg-slate-800 
+                disabled:bg-opacity-70 absolute right-2.5 top-[35%] transform -translate-y-1/2  w-11 h-11 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 dark:focus:ring-offset-0' type="submit"><ArrowRight/></button>
+            <span className="absolute left-5 top-[35%] transform -translate-y-1/2 text-2xl md:left-6"><svg className="w-5 h-5" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M22 22L20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
           </>
         )}
       </SearchForm>
-      {error && <p style={{color: 'red'}}>{error}</p>}
+      </div>
+      </div>
+      {/* {error && <p style={{color: 'red'}}>{error}</p>} */}
       {!term || !result?.total ? (
         <SearchResults.Empty />
       ) : (
@@ -70,6 +82,18 @@ export default function SearchPage() {
         </SearchResults>
       )}
       <Analytics.SearchView data={{searchTerm: term, searchResults: result}} />
+    </div>
+    <Banner
+            heading="Earn free money with Ciseco"
+            description="With Ciseco you will get a freeship & savings combo, etc."
+            buttonText="Discover more"
+            imageUrl={banner_img_2}
+            imageAlt="Kid with skateboard"
+            onButtonClick={handleClick}
+            imagePosition="right"
+            background_color="white"
+            buttonText_2="Saving combo"
+          />
     </div>
   );
 }

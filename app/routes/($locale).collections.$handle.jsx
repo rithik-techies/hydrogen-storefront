@@ -317,7 +317,7 @@ export default function Collection() {
         
 
         {/* Availability */}
-        <div className='flex-grow overflow-y-auto hiddenScroll'>
+        <div className='flex-grow overflow-y-auto scrollbar-hidden'>
         <div className="px-6 sm:px-8 divide-y ">
           <div className='py-8'>
           <h4 className="text-xl font-medium">Availability</h4>
@@ -494,7 +494,7 @@ return (
               <span class="text-neutral-700 ">{collection.products?.nodes?.length || 0} Products</span>
               </div>
             <h1 className='block text-2xl sm:text-3xl !m-0 lg:text-4xl font-semibold capitalize'>{collection.title}</h1>
-              <p className="block mt-4 text-neutral-500 dark:text-neutral-400 text-sm sm:text-base">{collection.description}</p>
+              <p className="mt-4 text-neutral-500 line-clamp-2 dark:text-neutral-400 text-sm sm:text-base">{collection.description}</p>
           </div>
 
            <div className="hidden md:flex items-center border-b border-slate-200 pb-8 gap-3 mb-8 flex-wrap relative" ref={dropdownRef}>
@@ -509,7 +509,7 @@ return (
                         <ChevronDown className="w-4 h-4 text-gray-400" />
                       </button>
                       <DesktopDropdown type="availability" isActive={activeDropdown === 'availability'} category="availability">
-                       <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto hiddenScroll">
+                       <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto scrollbar-hidden">
                           {filterOptions.availability.map(option => (
                             <label key={option} className="flex items-center gap-2 cursor-pointer">
                               <input
@@ -634,7 +634,7 @@ return (
                   </button>
 
                   <DesktopDropdown type="color" isActive={activeDropdown === 'color'} category="colors">
-                    <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto hiddenScroll">
+                    <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto scrollbar-hidden">
                       {filterOptions.colors?.length > 0 ? (
                         filterOptions.colors.map(color => (
                           <label key={color} className="flex items-center gap-2 cursor-pointer">
@@ -666,7 +666,7 @@ return (
                         <ChevronDown className="w-4 h-4 text-gray-400" />
                       </button>
                       <DesktopDropdown type="tags" isActive={activeDropdown === 'tags'} category="tags">
-                        <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto hiddenScroll">
+                        <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto scrollbar-hidden">
                           {filterOptions.tags?.length > 0 ? (
                           filterOptions.tags.map(tag => (
                             <label key={tag} className="flex items-center gap-2 cursor-pointer">
@@ -697,7 +697,7 @@ return (
                         <ChevronDown className="w-4 h-4 text-gray-400" />
                       </button>
                       <DesktopDropdown type="size" isActive={activeDropdown === 'size'} category="sizes">
-                        <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto hiddenScroll">
+                        <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto scrollbar-hidden">
                           {filterOptions.sizes?.length > 0 ? (
                           filterOptions.sizes.map(size => (
                             <label key={size} className="flex items-center gap-2 cursor-pointer">

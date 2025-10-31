@@ -34,12 +34,7 @@ export async function loader({ context }) {
 export default function Homepage() {
   const { collections, featuredCollection, latestBlogs, trendingProducts } = useLoaderData();
   const handleClick = () => alert("Button clicked!");
-  console.log('Featured collection:', featuredCollection);
-  console.log('Latest Blogs:', latestBlogs);
-  console.log('Trending Products:', trendingProducts);
-
-
-
+  
   return (
     <div className="home">
       <SlideShow />

@@ -59,7 +59,7 @@ export default function Blogs() {
   const {blogs} = useLoaderData();
 
   return (
-    <div className="blogs">
+    <div className="blogs container">
       <h1>Blogs</h1>
       <div className="blogs-grid">
         <PaginatedResourceSection connection={blogs}>

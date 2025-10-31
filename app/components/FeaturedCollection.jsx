@@ -3,41 +3,32 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { ProductItem } from './ProductItem';
 
 export default function FeaturedCollection({ collection }) {
+  // Always run hooks — never conditionalize before them
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(4);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  if (!collection || !collection.products?.nodes?.length) return null;
+  // Safe fallback for missing data
+  const products = collection?.products?.nodes || [];
+  const hasProducts = products.length > 0;
 
-  const products = collection.products.nodes;
-
-  // Responsive breakpoints - calculate visible products
   const updateVisibleCount = useCallback(() => {
     const width = window.innerWidth;
-    if (width < 640) {
-      setVisibleCount(1); // Mobile: 1 product
-    } else if (width < 768) {
-      setVisibleCount(2); // Small tablets: 2 products
-    } else if (width < 1024) {
-      setVisibleCount(3); // Tablets: 3 products
-    } else {
-      setVisibleCount(4); // Desktop: 4 products
-    }
+    if (width < 640) setVisibleCount(1);
+    else if (width < 768) setVisibleCount(2);
+    else if (width < 1024) setVisibleCount(3);
+    else setVisibleCount(4);
   }, []);
 
-  // Update visible count on mount and resize
   useEffect(() => {
     updateVisibleCount();
     window.addEventListener('resize', updateVisibleCount);
     return () => window.removeEventListener('resize', updateVisibleCount);
   }, [updateVisibleCount]);
 
-  // Reset index if it exceeds new bounds after resize
   useEffect(() => {
     const maxIndex = Math.max(0, products.length - visibleCount);
-    if (currentIndex > maxIndex) {
-      setCurrentIndex(maxIndex);
-    }
+    if (currentIndex > maxIndex) setCurrentIndex(maxIndex);
   }, [visibleCount, products.length, currentIndex]);
 
   const maxIndex = Math.max(0, products.length - visibleCount);
@@ -46,24 +37,14 @@ export default function FeaturedCollection({ collection }) {
   const nextSlide = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    
-    setCurrentIndex((prev) => {
-      if (prev >= maxIndex) return 0; // Loop to start
-      return prev + 1;
-    });
-
+    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
     setTimeout(() => setIsTransitioning(false), 500);
   };
 
   const prevSlide = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    
-    setCurrentIndex((prev) => {
-      if (prev === 0) return maxIndex; // Loop to end
-      return prev - 1;
-    });
-
+    setCurrentIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
     setTimeout(() => setIsTransitioning(false), 500);
   };
 
@@ -73,6 +54,15 @@ export default function FeaturedCollection({ collection }) {
     setCurrentIndex(index);
     setTimeout(() => setIsTransitioning(false), 500);
   };
+
+  // ⛔ Instead of returning early, render a placeholder (keeps hook order consistent)
+  if (!hasProducts) {
+    return (
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 text-center text-gray-400">
+        No products found.
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">

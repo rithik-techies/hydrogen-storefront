@@ -19,8 +19,9 @@ export function CartLineItem({layout, line}) {
   const {close} = useAside();
 
   return (
-    <li key={id} className="cart-line">
-      {image && (
+    <div key={id} className="flex py-6">
+      <div className='relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-neutral-100'>
+        {image && (
         <Image
           alt={title}
           aspectRatio="1/1"
@@ -30,8 +31,8 @@ export function CartLineItem({layout, line}) {
           width={100}
         />
       )}
-
-      <div className='w-[-webkit-fill-available]'>
+      </div>
+      <div className='w-[-webkit-fill-available] ml-4 flex flex-1 flex-col'>
         <Link
         className='flex justify-between'
           prefetch="intent"
@@ -47,7 +48,7 @@ export function CartLineItem({layout, line}) {
           </p>
           <ProductPrice price={line?.cost?.totalAmount} />
         </Link> 
-        <ul className='flex'>
+        <ul className='mt-1 text-sm text-slate-500 dark:text-slate-400 flex pe-3 gap-x-4'>
           {selectedOptions.map((option) => (
             <li className='pe-4' key={option.name}>
               <small>
@@ -58,7 +59,7 @@ export function CartLineItem({layout, line}) {
         </ul>
         <CartLineQuantity line={line} />
       </div>
-    </li>
+    </div>
   );
 }
 

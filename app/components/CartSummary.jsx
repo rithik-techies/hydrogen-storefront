@@ -1,12 +1,13 @@
 import {CartForm, Money} from '@shopify/hydrogen';
 import {useRef} from 'react';
+import { Link } from 'react-router';
 
 /**
  * @param {CartSummaryProps}
  */
 export function CartSummary({cart, layout}) {
   const className =
-    layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside grid gap-4 py-6 border-t border-slate-100 flex-shrink-0 mt-auto';
+    layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside grid gap-4 py-6 border-t-2 border-slate-100 flex-shrink-0 mt-auto';
 
   return (
     <div aria-labelledby="cart-summary " className={className}>
@@ -21,20 +22,21 @@ export function CartSummary({cart, layout}) {
         </dd>
       </dl>
       <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
-      <div className="grid grid-cols-2 gap-2 mt-5">
-        <a className="relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 lg:py-3.5 lg:px-7  bg-white text-slate-700 hover:bg-gray-100 flex-1 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 dark:focus:ring-offset-0" data-discover="true" href="/cart" target="_self">View cart</a>
+      <div className="grid grid-cols-2 gap-2">
+        <Link className="relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 lg:py-3.5 lg:px-7  bg-white text-slate-700 hover:bg-gray-100 flex-1 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 dark:focus:ring-offset-0" data-discover="true" to="/cart" target="_self">View cart</Link>
           <CartCheckoutActions checkoutUrl={cart.checkoutUrl} />
       </div>
       {/* <CartDiscounts discountCodes={cart.discountCodes} />
       <CartGiftCard giftCardCodes={cart.appliedGiftCards} /> */}
-      <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
+      <div class="flex justify-center text-center text-sm text-gray-500">
         <p>or {' '}
-          <button type="button" class="font-medium text-blue-600 hover:text-blue-500">Continue Shopping
+          <Link to="/collections" prefetch="viewport">
+          <button type="button" class="font-medium cursor-pointer text-blue-600 hover:text-blue-500">Continue Shopping
             <span> →</span>
           </button>
+          </Link>
         </p>
         </div>
-      
     </div>
   );
 }
@@ -45,9 +47,9 @@ function CartCheckoutActions({checkoutUrl}) {
   if (!checkoutUrl) return null;
 
   return (
-      <a className='flex' href={checkoutUrl} target="_self">
+      <Link className='flex' to={checkoutUrl} target="_self">
        <button className="relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium py-3 px-4 lg:py-3.5 lg:px-8  bg-slate-900 text-slate-50 shadow-xl hover:bg-slate-800 disabled:bg-opacity-90 flex-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 dark:focus:ring-offset-0" type="button">Check out</button>
-      </a>
+      </Link>
   );
 }
 

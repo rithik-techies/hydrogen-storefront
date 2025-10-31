@@ -1,7 +1,7 @@
 :root {
   --aside-width: 32rem;
   --cart-aside-summary-height-with-discount: 300px;
-  --cart-aside-summary-height: 250px;
+  --cart-aside-summary-height: 283px;
   --grid-item-width: 355px;
   --header-height: 64px;
   --color-dark: #000;
@@ -305,7 +305,7 @@ button.reset:hover:not(:has(> *)) {
 
 .cart-summary-aside {
   background: white;
-  border-top: 1px solid var(--color-dark);
+  /* border-top: 1px solid var(--color-dark); */
   bottom: 0;
   padding-top: 0.75rem;
   position: absolute;
@@ -670,4 +670,15 @@ button.reset:hover:not(:has(> *)) {
 
 .nc-p-l-container {
     padding-left: 16px;
+}
+
+/* Hide scrollbar for Chrome, Safari, and Opera */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge, and Firefox */
+.scrollbar-hidden {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
 }

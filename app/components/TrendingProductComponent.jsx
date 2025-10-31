@@ -45,18 +45,20 @@ export default function TrendingProducts({ products }) {
 
   products.forEach(product => {
     // Use product.options for colors and sizes
-    product.options?.forEach(option => {
-      if (option.name?.toLowerCase() === 'color') {
-        option.optionValues?.forEach(v => colorsSet.add(v.name));
-      }
-      if (option.name?.toLowerCase() === 'size') {
-        option.optionValues?.forEach(v => sizesSet.add(v.name));
-      }
+  product.options?.forEach(option => {
+         const optionName = option.name?.toLowerCase();
+        if (optionName === 'color') {
+          option.optionValues?.forEach(v => colorsSet.add(v.name));
+        }
+      
+        if (optionName === 'size' || optionName === 'shoe size' || optionName ===  'tamaño') {
+          option.optionValues?.forEach(v => sizesSet.add(v.name));
+        }
+      });
+  
+      // Tags
+      product.tags?.forEach(tag => tagsSet.add(tag));
     });
-
-    // Tags
-    product.tags?.forEach(tag => tagsSet.add(tag));
-  });
 
   setFilterOptions({
     availability: ['In stock', 'Out of stock'],
@@ -194,16 +196,18 @@ if (filters.colors.length > 0) {
 }
 
 // Size filter
-if (filters.sizes.length > 0) {
+ if (filters.sizes.length > 0) {
   const hasSize = product.variants?.nodes?.some(variant =>
-    variant.selectedOptions?.some(opt =>
-      opt.name?.toLowerCase() === 'size' &&
-      filters.sizes.includes(opt.value)
-    )
+    variant.selectedOptions?.some(opt => {
+      const optName = opt.name?.toLowerCase();
+      return (
+        (optName === 'size' || optName === 'shoe size' || optName ===  'tamaño') &&
+        filters.sizes.includes(opt.value)
+      );
+    })
   );
   if (!hasSize) return false;
 }
-
 
       // Tags
       if (filters.tags.length > 0) {
@@ -240,7 +244,7 @@ const showProduct = sortedProducts.slice(0, 8);
         
 
         {/* Availability */}
-        <div className='flex-grow overflow-y-auto hiddenScroll'>
+        <div className='flex-grow overflow-y-auto scrollbar-hidden'>
         <div className="px-6 sm:px-8 divide-y ">
           <div className='py-8'>
           <h4 className="text-xl font-medium">Availability</h4>
@@ -427,7 +431,7 @@ const showProduct = sortedProducts.slice(0, 8);
               <ChevronDown className="w-4 h-4 text-gray-400" />
             </button>
             <DesktopDropdown type="availability" isActive={activeDropdown === 'availability'} category="availability">
-             <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto hiddenScroll">
+             <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto scrollbar-hidden">
                 {filterOptions.availability.map(option => (
                   <label key={option} className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -545,7 +549,7 @@ const showProduct = sortedProducts.slice(0, 8);
               <ChevronDown className="w-4 h-4 text-gray-400" />
             </button>
             <DesktopDropdown type="color" isActive={activeDropdown === 'color'} category="colors">
-              <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto hiddenScroll">
+              <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto scrollbar-hidden">
                 {filterOptions.colors.map(color => (
                   <label key={color} className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -572,7 +576,7 @@ const showProduct = sortedProducts.slice(0, 8);
               <ChevronDown className="w-4 h-4 text-gray-400" />
             </button>
             <DesktopDropdown type="tags" isActive={activeDropdown === 'tags'} category="tags">
-              <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto hiddenScroll">
+              <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto scrollbar-hidden">
                 {filterOptions.tags.map(tag => (
                   <label key={tag} className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -599,7 +603,7 @@ const showProduct = sortedProducts.slice(0, 8);
               <ChevronDown className="w-4 h-4 text-gray-400" />
             </button>
             <DesktopDropdown type="size" isActive={activeDropdown === 'size'} category="sizes">
-              <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto hiddenScroll">
+              <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto scrollbar-hidden">
                 {filterOptions.sizes.map(size => (
                   <label key={size} className="flex items-center gap-2 cursor-pointer">
                     <input

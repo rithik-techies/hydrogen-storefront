@@ -1,15 +1,6 @@
 import React from 'react';
-
-// Mock Money component for demonstration
-const Money = ({ data }) => {
-  if (!data) return null;
-  return (
-    <span>
-      {data.currencyCode === 'USD' ? '$' : ''}
-      {parseFloat(data.amount).toFixed(2)}
-    </span>
-  );
-};
+import {Link} from 'react-router';
+import {Image, Money} from '@shopify/hydrogen';
 
 /**
  * @param {{
@@ -23,6 +14,7 @@ export function ProductPrice({price, compareAtPrice, availableForSale = true}) {
     compareAtPrice &&
     price &&
     parseFloat(compareAtPrice.amount) > parseFloat(price.amount);
+console.log(price)
 
   return (
     <div className="flex flex-wrap items-center gap-4 sm:gap-5">
@@ -77,47 +69,3 @@ export function ProductPrice({price, compareAtPrice, availableForSale = true}) {
 }
 
 /** @typedef {import('@shopify/hydrogen/storefront-api-types').MoneyV2} MoneyV2 */
-
-// Demo Component
-export default function Demo() {
-
-  return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">
-          Product Price Component Examples
-        </h1>
-
-        {/* On Sale */}
-        <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">On Sale</h2>
-          <ProductPrice 
-            price={mockPrice}
-            compareAtPrice={mockComparePrice}
-            availableForSale={true}
-          />
-        </div>
-
-        {/* Regular Price */}
-        <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Regular Price</h2>
-          <ProductPrice 
-            price={mockPrice}
-            compareAtPrice={null}
-            availableForSale={true}
-          />
-        </div>
-
-        {/* Sold Out */}
-        <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Sold Out</h2>
-          <ProductPrice 
-            price={mockPrice}
-            compareAtPrice={mockComparePrice}
-            availableForSale={false}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}

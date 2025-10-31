@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router';
 import { Image } from '@shopify/hydrogen';
 
@@ -15,14 +16,24 @@ const CollectionExplorer = ({ collections = [] }) => {
     { id: 'jewelry', label: 'Jewelry', icon: '💎' },
   ];
 
-  const [activeCategory, setActiveCategory] = useState('kids');
+ const [activeCategory, setActiveCategory] = useState('kids');
+  const [categoryCollections, setCategoryCollections] = useState({});
 
-  // ✅ Random 6 collections each time category changes
-  const displayedCollections = useMemo(() => {
-    if (!collections?.length) return [];
-    const shuffled = [...collections].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, 6);
-  }, [activeCategory, collections]);
+  // When collections first load, pre-generate stable random selections for each category
+  useEffect(() => {
+    if (!collections?.length) return;
+
+    const newMap = {};
+    categories.forEach((cat) => {
+      // Random shuffle but only once
+      const shuffled = [...collections].sort(() => Math.random() - 0.5);
+      newMap[cat.id] = shuffled.slice(0, 6);
+    });
+    setCategoryCollections(newMap);
+  }, [collections]);
+
+  // Always show same set for selected category
+  const displayedCollections = categoryCollections[activeCategory] || [];
 
   return (
     <div className="min-h-screen bg-neutral-100">
@@ -35,8 +46,8 @@ const CollectionExplorer = ({ collections = [] }) => {
        </div>
 
         {/* Category Tabs */}
-        <div className="nc-Nav mb-12 lg:mb-14 relative flex justify-center w-full text-sm md:text-base !hiddenScrollbar">
-          <div className="flex  p-1 bg-white dark:bg-neutral-800 rounded-full shadow-lg overflow-x-auto !hiddenScrollbar">
+        <div className="nc-Nav mb-12 lg:mb-14 relative flex justify-center w-full text-sm md:text-base !scrollbar-hidden">
+          <div className="flex  p-1 bg-white dark:bg-neutral-800 rounded-full shadow-lg overflow-x-auto !bar">
             {categories.map((category) => (
               <button
                 key={category.id}
