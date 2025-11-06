@@ -145,12 +145,12 @@ export default function Cart() {
         ) : (
           <div className="text-center py-16">
             <p className="text-xl text-gray-600 mb-4">Your cart is empty</p>
-            <a 
-              href="/collections/all" 
+            <Link 
+              to="/collections/all" 
               className="inline-block bg-gray-900 text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition"
             >
               Continue Shopping
-            </a>
+            </Link>
           </div>
         )}
       </div>
@@ -296,12 +296,12 @@ function CartSummary({cart}) {
       </div>
 
       {/* Checkout Button */}
-      <a
-        href="/checkout"
+      <Link
+        to={cart.checkoutUrl} target="_self"
         className="block w-full bg-slate-900 text-white text-center py-3.5 rounded-full font-semibold hover:bg-slate-800 transition mb-5"
       >
         Checkout
-      </a>
+      </Link>
 
       {/* Policy Links */}
       <div className="flex items-center justify-center text-xs text-gray-500 gap-1 flex-wrap">
@@ -309,9 +309,9 @@ function CartSummary({cart}) {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <span>Learn more</span>
-        <a href="/policies/shipping" className="text-blue-600 underline hover:text-blue-700">shipping</a>
+        <Link to="/policies/shipping" className="text-blue-600 underline hover:text-blue-700">shipping</Link>
         <span>and</span>
-        <a href="/policies/refund" className="text-blue-600 underline hover:text-blue-700">refund</a>
+        <Link to="/policies/refund" className="text-blue-600 underline hover:text-blue-700">refund</Link>
         <span>information</span>
       </div>
     </div>

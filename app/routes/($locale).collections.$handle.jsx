@@ -497,239 +497,264 @@ return (
               <p className="mt-4 text-neutral-500 line-clamp-2 dark:text-neutral-400 text-sm sm:text-base">{collection.description}</p>
           </div>
 
-           <div className="hidden md:flex items-center border-b border-slate-200 pb-8 gap-3 mb-8 flex-wrap relative" ref={dropdownRef}>
-                    {/* Availability Filter */}
-                    <div className="relative">
-                      <button 
-                        onClick={() => toggleDropdown('availability')}
-                        className="relative flex gap-2 items-center justify-center ps-4 pe-3.5 py-2 text-sm rounded-full border focus:outline-none select-none border-blue-600 bg-primary-50 text-primary-900"
-                      >
-                        <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21.63 14.75C21.63 15.64 21.39 16.48 20.95 17.2C20.13 18.57 18.62 19.5 16.88 19.5C15.94 19.5 15.06 19.22 14.32 18.73C13.7 18.35 13.19 17.82 12.82 17.2C12.38 16.48 12.13 15.64 12.13 14.75C12.13 12.13 14.26 10 16.88 10C17.24 10 17.59 10.04 17.92 10.12C20.05 10.59 21.63 12.49 21.63 14.75Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path><path d="M15.03 14.75L16.2 15.92L18.73 13.58" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M20.6901 4.01999V6.23999C20.6901 7.04999 20.1801 8.06001 19.6801 8.57001L17.92 10.12C17.59 10.04 17.2401 10 16.8801 10C14.2601 10 12.1301 12.13 12.1301 14.75C12.1301 15.64 12.3801 16.48 12.8201 17.2C13.1901 17.82 13.7001 18.35 14.3201 18.73V19.07C14.3201 19.68 13.92 20.49 13.41 20.79L12.0001 21.7C10.6901 22.51 8.87006 21.6 8.87006 19.98V14.63C8.87006 13.92 8.46006 13.01 8.06006 12.51L4.22003 8.47C3.72003 7.96 3.31006 7.05001 3.31006 6.45001V4.12C3.31006 2.91 4.22008 2 5.33008 2H18.67C19.78 2 20.6901 2.90999 20.6901 4.01999Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                        Availability
-                        <ChevronDown className="w-4 h-4 text-gray-400" />
-                      </button>
-                      <DesktopDropdown type="availability" isActive={activeDropdown === 'availability'} category="availability">
-                       <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto scrollbar-hidden">
-                          {filterOptions.availability.map(option => (
-                            <label key={option} className="flex items-center gap-2 cursor-pointer">
-                              <input
-                                type="checkbox"
-                                checked={tempFilters.availability.includes(option)}
-                                onChange={() => toggleFilter('availability', option, true)}
-                                className="focus:ring-action-primary text-primary-500 rounded border-slate-400/80 hover:border-slate-700 bg-transparent dark:border-slate-700 dark:hover:border-slate-500 dark:checked:bg-primary-500 focus:ring-primary-500 w-6 h-6"
-                              />
-                              <span className="text-sm text-gray-700">{option}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </DesktopDropdown>
-                    </div>
-          
-                    {/* Price Filter */}
-                    <div className="relative">
-                      <button 
-                        onClick={() => toggleDropdown('price')}
-                        className="relative flex gap-2 items-center justify-center ps-4 pe-3.5 py-2 text-sm rounded-full border focus:outline-none select-none border-blue-600 bg-primary-50 text-primary-900"
-                      >
-                       <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.67188 14.3298C8.67188 15.6198 9.66188 16.6598 10.8919 16.6598H13.4019C14.4719 16.6598 15.3419 15.7498 15.3419 14.6298C15.3419 13.4098 14.8119 12.9798 14.0219 12.6998L9.99187 11.2998C9.20187 11.0198 8.67188 10.5898 8.67188 9.36984C8.67188 8.24984 9.54187 7.33984 10.6119 7.33984H13.1219C14.3519 7.33984 15.3419 8.37984 15.3419 9.66984" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 6V18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                        Price
-                        <ChevronDown className="w-4 h-4 text-gray-400" />
-                      </button>
-                      <DesktopDropdown type="price" isActive={activeDropdown === 'price'} category="price">
-                        <p className="text-xs text-gray-500 mb-3">
-                          The Max Price is {tempFilters.priceMax}
-                        </p>
-                        
-                        <div className="relative h-1 bg-gray-200 rounded-lg">
-                          {/* Active range highlight */}
-                          <div
-                            className="absolute h-1 bg-cyan-500 rounded-lg"
-                            style={{
-                              left: `${((tempFilters.priceMin - minPrice) / (maxPrice - minPrice)) * 100}%`,
-                              right: `${100 - ((tempFilters.priceMax - minPrice) / (maxPrice - minPrice)) * 100}%`
-                            }}
-                          />
-                          
-                          {/* Min range slider */}
-                          <input
-                            type="range"
-                            min={minPrice}
-                            max={maxPrice}
-                            value={tempFilters.priceMin}
-                            onChange={(e) => {
-                              const value = Number(e.target.value);
-                              if (value <= tempFilters.priceMax) {
-                                setTempFilters(prev => ({ ...prev, priceMin: value }));
-                              }
-                            }}
-                            className="absolute w-full h-1 bg-transparent appearance-none cursor-pointer pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cyan-600 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-cyan-600 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
-                          />
-                          
-                          {/* Max range slider */}
-                          <input
-                            type="range"
-                            min={minPrice}
-                            max={maxPrice}
-                            value={tempFilters.priceMax}
-                            onChange={(e) => {
-                              const value = Number(e.target.value);
-                              if (value >= tempFilters.priceMin) {
-                                setTempFilters(prev => ({ ...prev, priceMax: value }));
-                              }
-                            }}
-                            className="absolute w-full h-1 bg-transparent appearance-none cursor-pointer pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cyan-600 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-cyan-600 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
-                          />
-                        </div>
-                        
-                        <div className="flex gap-4 mt-4">
-                          <div>
-                            <label className="text-xs text-gray-600 block mb-1">Min price</label>
-                            <input
-                              type="number"
-                              value={tempFilters.priceMin}
-                              onChange={(e) => {
-                                const value = Number(e.target.value);
-                                if (value <= tempFilters.priceMax && value >= minPrice) {
-                                  setTempFilters(prev => ({ ...prev, priceMin: value }));
-                                }
-                              }}
-                              className="w-24 px-3 py-1.5 border rounded text-sm"
-                              placeholder={minPrice}
-                            />
-                          </div>
-                          <div>
-                            <label className="text-xs text-gray-600 block mb-1">Max price</label>
-                            <input
-                              type="number"
-                              value={tempFilters.priceMax}
-                              onChange={(e) => {
-                                const value = Number(e.target.value);
-                                if (value >= tempFilters.priceMin && value <= maxPrice) {
-                                  setTempFilters(prev => ({ ...prev, priceMax: value }));
-                                }
-                              }}
-                              className="w-24 px-3 py-1.5 border rounded text-sm"
-                              placeholder={maxPrice}
-                            />
-                          </div>
-                        </div>
-                      </DesktopDropdown>
-                    </div>
-          
-                    {/* Color Filter */}
-                 <div className="relative">
-                  <button 
-                    onClick={() => toggleDropdown('color')}
-                    className="relative flex gap-2 items-center justify-center ps-4 pe-3.5 py-2 text-sm rounded-full border focus:outline-none select-none border-blue-600 bg-primary-50 text-primary-900"
-                  >
-                    <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M7.01 18.0001L3 13.9901C1.66 12.6501 1.66 11.32 3 9.98004L9.68 3.30005L17.03 10.6501C17.4 11.0201 17.4 11.6201 17.03 11.9901L11.01 18.0101C9.69 19.3301 8.35 19.3301 7.01 18.0001Z" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"></path>
-                      <path d="M8.35 1.94995L9.69 3.28992" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"></path>
-                      <path d="M2.07 11.92L17.19 11.26" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"></path>
-                      <path d="M3 22H16" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"></path>
-                      <path d="M18.85 15C18.85 15 17 17.01 17 18.24C17 19.26 17.83 20.09 18.85 20.09C19.87 20.09 20.7 19.26 20.7 18.24C20.7 17.01 18.85 15 18.85 15Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
-                    </svg>
-                    Color
-                    <ChevronDown className="w-4 h-4 text-gray-400" />
-                  </button>
-
-                  <DesktopDropdown type="color" isActive={activeDropdown === 'color'} category="colors">
-                    <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto scrollbar-hidden">
-                      {filterOptions.colors?.length > 0 ? (
-                        filterOptions.colors.map(color => (
-                          <label key={color} className="flex items-center gap-2 cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={tempFilters.colors.includes(color)}
-                              onChange={() => toggleFilter('colors', color, true)}
-                              className="focus:ring-action-primary text-primary-500 rounded border-slate-400/80 hover:border-slate-700 bg-transparent dark:border-slate-700 dark:hover:border-slate-500 dark:checked:bg-primary-500 focus:ring-primary-500 w-6 h-6"
-                            />
-                            <span className="text-sm text-gray-700">{color}</span>
-                          </label>
-                        ))
-                      ) : (
-                        <p className="text-sm text-gray-500 text-center py-4">No color options available</p>
-                      )}
-                    </div>
-                  </DesktopDropdown>
-                </div>
-
-          
-                    {/* Tags Filter */}
-                    <div className="relative">
-                      <button 
-                        onClick={() => toggleDropdown('tags')}
-                        className="relative flex gap-2 items-center justify-center ps-4 pe-3.5 py-2 text-sm rounded-full border focus:outline-none select-none border-blue-600 bg-primary-50 text-primary-900"
-                      >
-                       <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.16989 15.3L8.69989 19.83C10.5599 21.69 13.5799 21.69 15.4499 19.83L19.8399 15.44C21.6999 13.58 21.6999 10.56 19.8399 8.69005L15.2999 4.17005C14.3499 3.22005 13.0399 2.71005 11.6999 2.78005L6.69989 3.02005C4.69989 3.11005 3.10989 4.70005 3.00989 6.69005L2.76989 11.69C2.70989 13.04 3.21989 14.35 4.16989 15.3Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M9.5 12C10.8807 12 12 10.8807 12 9.5C12 8.11929 10.8807 7 9.5 7C8.11929 7 7 8.11929 7 9.5C7 10.8807 8.11929 12 9.5 12Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
-                        Tags
-                        <ChevronDown className="w-4 h-4 text-gray-400" />
-                      </button>
-                      <DesktopDropdown type="tags" isActive={activeDropdown === 'tags'} category="tags">
-                        <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto scrollbar-hidden">
-                          {filterOptions.tags?.length > 0 ? (
-                          filterOptions.tags.map(tag => (
-                            <label key={tag} className="flex items-center gap-2 cursor-pointer">
-                              <input
-                                type="checkbox"
-                                checked={tempFilters.tags.includes(tag)}
-                                onChange={() => toggleFilter('tags', tag, true)}
-                                className="focus:ring-action-primary text-primary-500 rounded border-slate-400/80 hover:border-slate-700 bg-transparent dark:border-slate-700 dark:hover:border-slate-500 dark:checked:bg-primary-500 focus:ring-primary-500 w-6 h-6"
-                              />
-                              <span className="text-sm text-gray-700">{tag}</span>
-                            </label>
-                          ))
-                      ) : (
-                        <p className="text-sm text-gray-500 text-center py-4">No tags options available</p>
-                      )}
-                        </div>
-                      </DesktopDropdown>
-                    </div>
-          
-                    {/* Size Filter */}
-                    <div className="relative">
-                      <button 
-                        onClick={() => toggleDropdown('size')}
-                        className="relative flex gap-2 items-center justify-center ps-4 pe-3.5 py-2 text-sm rounded-full border focus:outline-none select-none border-blue-600 bg-primary-50 text-primary-900"
-                      >
-                        <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 9V3H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3 15V21H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 3L13.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.5 13.5L3 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                        Size
-                        <ChevronDown className="w-4 h-4 text-gray-400" />
-                      </button>
-                      <DesktopDropdown type="size" isActive={activeDropdown === 'size'} category="sizes">
-                        <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto scrollbar-hidden">
-                          {filterOptions.sizes?.length > 0 ? (
-                          filterOptions.sizes.map(size => (
-                            <label key={size} className="flex items-center gap-2 cursor-pointer">
-                              <input
-                                type="checkbox"
-                                checked={tempFilters.sizes.includes(size)}
-                                onChange={() => toggleFilter('sizes', size, true)}
-                                className="focus:ring-action-primary text-primary-500 rounded border-slate-400/80 hover:border-slate-700 bg-transparent dark:border-slate-700 dark:hover:border-slate-500 dark:checked:bg-primary-500 focus:ring-primary-500 w-6 h-6"
-                              />
-                              <span className="text-sm text-gray-700">{size}</span>
-                            </label>
-                           ))
-                      ) : (
-                        <p className="text-sm text-gray-500 text-center py-4">No Size options available</p>
-                      )}
-                        </div>
-                      </DesktopDropdown>
-                    </div>
-                    <SortingFunction/>
-                  </div>
-          
-                  {/* Mobile Filter/Sort Bar */}
-                <div className="md:hidden flex items-center justify-between gap-3 mb-6">
-                  <button
-                    onClick={() => setShowMobileFilters(true)}
-                    className="relative flex gap-2 items-center justify-center px-4 py-2 text-sm rounded-full focus:outline-none select-none border border-neutral-300 text-neutral-700 hover:border-neutral-500 focus:border-neutral-500"
-                  >
-                    <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 6.5H16" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6 6.5H2" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10 10C11.933 10 13.5 8.433 13.5 6.5C13.5 4.567 11.933 3 10 3C8.067 3 6.5 4.567 6.5 6.5C6.5 8.433 8.067 10 10 10Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path><path d="M22 17.5H18" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8 17.5H2" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14 21C15.933 21 17.5 19.433 17.5 17.5C17.5 15.567 15.933 14 14 14C12.067 14 10.5 15.567 10.5 17.5C10.5 19.433 12.067 21 14 21Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                    Filters
-                  </button>
-                  <MobileSortingFunction/>
-                </div>
+           <div className="hidden lg:flex items-centerborder-b border-slate-200 pb-8 gap-3 mb-8 flex-wrap relative" ref={dropdownRef}>
+                                     {/* Availability Filter */}
+                                     <div className="relative">
+                                       <button 
+                                         onClick={() => toggleDropdown('availability')}
+                                          className={`relative flex gap-2 items-center justify-center ps-4 pe-3.5 py-2 text-sm rounded-full border focus:outline-none select-none  transition-colors duration-200
+                                           ${
+                                             activeDropdown === 'availability'
+                                               ? 'bg-blue-100 border-blue-600 text-blue-900'
+                                               : 'bg-primary-50 text-primary-900'
+                                           }`}
+                                       >
+                                         <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21.63 14.75C21.63 15.64 21.39 16.48 20.95 17.2C20.13 18.57 18.62 19.5 16.88 19.5C15.94 19.5 15.06 19.22 14.32 18.73C13.7 18.35 13.19 17.82 12.82 17.2C12.38 16.48 12.13 15.64 12.13 14.75C12.13 12.13 14.26 10 16.88 10C17.24 10 17.59 10.04 17.92 10.12C20.05 10.59 21.63 12.49 21.63 14.75Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path><path d="M15.03 14.75L16.2 15.92L18.73 13.58" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M20.6901 4.01999V6.23999C20.6901 7.04999 20.1801 8.06001 19.6801 8.57001L17.92 10.12C17.59 10.04 17.2401 10 16.8801 10C14.2601 10 12.1301 12.13 12.1301 14.75C12.1301 15.64 12.3801 16.48 12.8201 17.2C13.1901 17.82 13.7001 18.35 14.3201 18.73V19.07C14.3201 19.68 13.92 20.49 13.41 20.79L12.0001 21.7C10.6901 22.51 8.87006 21.6 8.87006 19.98V14.63C8.87006 13.92 8.46006 13.01 8.06006 12.51L4.22003 8.47C3.72003 7.96 3.31006 7.05001 3.31006 6.45001V4.12C3.31006 2.91 4.22008 2 5.33008 2H18.67C19.78 2 20.6901 2.90999 20.6901 4.01999Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                         Availability
+                                         <ChevronDown className={`w-4 h-4 ${ activeDropdown === 'availability'? 'text-blue-900':'text-gray-400'}`} />
+                                       </button>
+                                       <DesktopDropdown type="availability" isActive={activeDropdown === 'availability'} category="availability">
+                                        <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto scrollbar-hidden">
+                                           {filterOptions.availability.map(option => (
+                                             <label key={option} className="flex items-center gap-2 cursor-pointer">
+                                               <input
+                                                 type="checkbox"
+                                                 checked={tempFilters.availability.includes(option)}
+                                                 onChange={() => toggleFilter('availability', option, true)}
+                                                 className="focus:ring-action-primary text-primary-500 rounded border-slate-400/80 hover:border-slate-700 bg-transparent dark:border-slate-700 dark:hover:border-slate-500 dark:checked:bg-primary-500 focus:ring-primary-500 w-6 h-6"
+                                               />
+                                               <span className="text-sm text-gray-700">{option}</span>
+                                             </label>
+                                           ))}
+                                         </div>
+                                       </DesktopDropdown>
+                                     </div>
+                           
+                                     {/* Price Filter */}
+                                     <div className="relative">
+                                       <button 
+                                         onClick={() => toggleDropdown('price')}
+                                          className={`relative flex gap-2 items-center justify-center ps-4 pe-3.5 py-2 text-sm rounded-full border focus:outline-none select-none  transition-colors duration-200
+                                                   ${
+                                                     activeDropdown === 'price'
+                                                       ? 'bg-blue-100 border-blue-600 text-blue-900'
+                                                       : 'bg-primary-50 text-primary-900'
+                                                   }`}
+                                       >
+                                        <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.67188 14.3298C8.67188 15.6198 9.66188 16.6598 10.8919 16.6598H13.4019C14.4719 16.6598 15.3419 15.7498 15.3419 14.6298C15.3419 13.4098 14.8119 12.9798 14.0219 12.6998L9.99187 11.2998C9.20187 11.0198 8.67188 10.5898 8.67188 9.36984C8.67188 8.24984 9.54187 7.33984 10.6119 7.33984H13.1219C14.3519 7.33984 15.3419 8.37984 15.3419 9.66984" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 6V18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                         Price
+                                         <ChevronDown className={`w-4 h-4 ${ activeDropdown === 'price'? 'text-blue-900':'text-gray-400'}`} />
+                                       </button>
+                                       <DesktopDropdown type="price" isActive={activeDropdown === 'price'} category="price">
+                                         <p className="text-xs text-gray-500 mb-3">
+                                           The Max Price is {tempFilters.priceMax}
+                                         </p>
+                                         
+                                         <div className="relative h-1 bg-gray-200 rounded-lg">
+                                           {/* Active range highlight */}
+                                           <div
+                                             className="absolute h-1 bg-cyan-500 rounded-lg"
+                                             style={{
+                                               left: `${((tempFilters.priceMin - minPrice) / (maxPrice - minPrice)) * 100}%`,
+                                               right: `${100 - ((tempFilters.priceMax - minPrice) / (maxPrice - minPrice)) * 100}%`
+                                             }}
+                                           />
+                                           
+                                           {/* Min range slider */}
+                                           <input
+                                             type="range"
+                                             min={minPrice}
+                                             max={maxPrice}
+                                             value={tempFilters.priceMin}
+                                             onChange={(e) => {
+                                               const value = Number(e.target.value);
+                                               if (value <= tempFilters.priceMax) {
+                                                 setTempFilters(prev => ({ ...prev, priceMin: value }));
+                                               }
+                                             }}
+                                             className="absolute w-full h-1 bg-transparent appearance-none cursor-pointer pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cyan-600 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-cyan-600 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+                                           />
+                                           
+                                           {/* Max range slider */}
+                                           <input
+                                             type="range"
+                                             min={minPrice}
+                                             max={maxPrice}
+                                             value={tempFilters.priceMax}
+                                             onChange={(e) => {
+                                               const value = Number(e.target.value);
+                                               if (value >= tempFilters.priceMin) {
+                                                 setTempFilters(prev => ({ ...prev, priceMax: value }));
+                                               }
+                                             }}
+                                             className="absolute w-full h-1 bg-transparent appearance-none cursor-pointer pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-cyan-600 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-cyan-600 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+                                           />
+                                         </div>
+                                         
+                                         <div className="flex gap-4 mt-4">
+                                           <div>
+                                             <label className="text-xs text-gray-600 block mb-1">Min price</label>
+                                             <input
+                                               type="number"
+                                               value={tempFilters.priceMin}
+                                               onChange={(e) => {
+                                                 const value = Number(e.target.value);
+                                                 if (value <= tempFilters.priceMax && value >= minPrice) {
+                                                   setTempFilters(prev => ({ ...prev, priceMin: value }));
+                                                 }
+                                               }}
+                                               className="w-24 px-3 py-1.5 border rounded text-sm"
+                                               placeholder={minPrice}
+                                             />
+                                           </div>
+                                           <div>
+                                             <label className="text-xs text-gray-600 block mb-1">Max price</label>
+                                             <input
+                                               type="number"
+                                               value={tempFilters.priceMax}
+                                               onChange={(e) => {
+                                                 const value = Number(e.target.value);
+                                                 if (value >= tempFilters.priceMin && value <= maxPrice) {
+                                                   setTempFilters(prev => ({ ...prev, priceMax: value }));
+                                                 }
+                                               }}
+                                               className="w-24 px-3 py-1.5 border rounded text-sm"
+                                               placeholder={maxPrice}
+                                             />
+                                           </div>
+                                         </div>
+                                       </DesktopDropdown>
+                                     </div>
+                           
+                                     {/* Color Filter */}
+                                  <div className="relative">
+                                   <button 
+                                     onClick={() => toggleDropdown('color')}
+                                      className={`relative flex gap-2 items-center justify-center ps-4 pe-3.5 py-2 text-sm rounded-full border focus:outline-none select-none  transition-colors duration-200
+                                             ${
+                                               activeDropdown === 'color'
+                                                 ? 'bg-blue-100 border-blue-600 text-blue-900'
+                                                 : 'bg-primary-50 text-primary-900'
+                                             }`}
+                                   >
+                                     <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                       <path d="M7.01 18.0001L3 13.9901C1.66 12.6501 1.66 11.32 3 9.98004L9.68 3.30005L17.03 10.6501C17.4 11.0201 17.4 11.6201 17.03 11.9901L11.01 18.0101C9.69 19.3301 8.35 19.3301 7.01 18.0001Z" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"></path>
+                                       <path d="M8.35 1.94995L9.69 3.28992" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"></path>
+                                       <path d="M2.07 11.92L17.19 11.26" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"></path>
+                                       <path d="M3 22H16" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"></path>
+                                       <path d="M18.85 15C18.85 15 17 17.01 17 18.24C17 19.26 17.83 20.09 18.85 20.09C19.87 20.09 20.7 19.26 20.7 18.24C20.7 17.01 18.85 15 18.85 15Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+                                     </svg>
+                                     Color
+                                     <ChevronDown className={`w-4 h-4 ${ activeDropdown === 'color'? 'text-blue-900':'text-gray-400'}`} />
+                                   </button>
+                 
+                                   <DesktopDropdown type="color" isActive={activeDropdown === 'color'} category="colors">
+                                     <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto scrollbar-hidden">
+                                       {filterOptions.colors?.length > 0 ? (
+                                         filterOptions.colors.map(color => (
+                                           <label key={color} className="flex items-center gap-2 cursor-pointer">
+                                             <input
+                                               type="checkbox"
+                                               checked={tempFilters.colors.includes(color)}
+                                               onChange={() => toggleFilter('colors', color, true)}
+                                               className="focus:ring-action-primary text-primary-500 rounded border-slate-400/80 hover:border-slate-700 bg-transparent dark:border-slate-700 dark:hover:border-slate-500 dark:checked:bg-primary-500 focus:ring-primary-500 w-6 h-6"
+                                             />
+                                             <span className="text-sm text-gray-700">{color}</span>
+                                           </label>
+                                         ))
+                                       ) : (
+                                         <p className="text-sm text-gray-500 text-center py-4">No color options available</p>
+                                       )}
+                                     </div>
+                                   </DesktopDropdown>
+                                 </div>
+                 
+                           
+                                     {/* Tags Filter */}
+                                     <div className="relative">
+                                       <button 
+                                         onClick={() => toggleDropdown('tags')}
+                                          className={`relative flex gap-2 items-center justify-center ps-4 pe-3.5 py-2 text-sm rounded-full border focus:outline-none select-none  transition-colors duration-200
+                                                   ${
+                                                     activeDropdown === 'tags'
+                                                       ? 'bg-blue-100 border-blue-600 text-blue-900'
+                                                       : 'bg-primary-50 text-primary-900'
+                                                   }`}
+                                       >
+                                        <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.16989 15.3L8.69989 19.83C10.5599 21.69 13.5799 21.69 15.4499 19.83L19.8399 15.44C21.6999 13.58 21.6999 10.56 19.8399 8.69005L15.2999 4.17005C14.3499 3.22005 13.0399 2.71005 11.6999 2.78005L6.69989 3.02005C4.69989 3.11005 3.10989 4.70005 3.00989 6.69005L2.76989 11.69C2.70989 13.04 3.21989 14.35 4.16989 15.3Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M9.5 12C10.8807 12 12 10.8807 12 9.5C12 8.11929 10.8807 7 9.5 7C8.11929 7 7 8.11929 7 9.5C7 10.8807 8.11929 12 9.5 12Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+                                         Tags
+                                         <ChevronDown className={`w-4 h-4 ${ activeDropdown === 'tags'? 'text-blue-900':'text-gray-400'}`} />
+                                       </button>
+                                       <DesktopDropdown type="tags" isActive={activeDropdown === 'tags'} category="tags">
+                                         <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto scrollbar-hidden">
+                                           {filterOptions.tags?.length > 0 ? (
+                                           filterOptions.tags.map(tag => (
+                                             <label key={tag} className="flex items-center gap-2 cursor-pointer">
+                                               <input
+                                                 type="checkbox"
+                                                 checked={tempFilters.tags.includes(tag)}
+                                                 onChange={() => toggleFilter('tags', tag, true)}
+                                                 className="focus:ring-action-primary text-primary-500 rounded border-slate-400/80 hover:border-slate-700 bg-transparent dark:border-slate-700 dark:hover:border-slate-500 dark:checked:bg-primary-500 focus:ring-primary-500 w-6 h-6"
+                                               />
+                                               <span className="text-sm text-gray-700">{tag}</span>
+                                             </label>
+                                           ))
+                                       ) : (
+                                         <p className="text-sm text-gray-500 text-center py-4">No tags options available</p>
+                                       )}
+                                         </div>
+                                       </DesktopDropdown>
+                                     </div>
+                           
+                                     {/* Size Filter */}
+                                     <div className="relative">
+                                       <button 
+                                         onClick={() => toggleDropdown('size')}
+                                          className={`relative flex gap-2 items-center justify-center ps-4 pe-3.5 py-2 text-sm rounded-full border focus:outline-none select-none  transition-colors duration-200
+                                               ${
+                                                 activeDropdown === 'size'
+                                                   ? 'bg-blue-100 text-blue-900 border-blue-600'
+                                                   : 'bg-primary-50 text-primary-900'
+                                               }`}
+                                       >
+                                         <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 9V3H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3 15V21H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 3L13.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.5 13.5L3 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                         Size
+                                         <ChevronDown className={`w-4 h-4 ${ activeDropdown === 'size'? 'text-blue-900':'text-gray-400'}`} />
+                                       </button>
+                                       <DesktopDropdown type="size" isActive={activeDropdown === 'size'} category="sizes">
+                                         <div className="relative flex flex-col px-5 py-6 space-y-5 max-h-96 overflow-auto scrollbar-hidden">
+                                           {filterOptions.sizes?.length > 0 ? (
+                                           filterOptions.sizes.map(size => (
+                                             <label key={size} className="flex items-center gap-2 cursor-pointer">
+                                               <input
+                                                 type="checkbox"
+                                                 checked={tempFilters.sizes.includes(size)}
+                                                 onChange={() => toggleFilter('sizes', size, true)}
+                                                 className="focus:ring-action-primary text-primary-500 rounded border-slate-400/80 hover:border-slate-700 bg-transparent dark:border-slate-700 dark:hover:border-slate-500 dark:checked:bg-primary-500 focus:ring-primary-500 w-6 h-6"
+                                               />
+                                               <span className="text-sm text-gray-700">{size}</span>
+                                             </label>
+                                            ))
+                                       ) : (
+                                         <p className="text-sm text-gray-500 text-center py-4">No Size options available</p>
+                                       )}
+                                         </div>
+                                       </DesktopDropdown>
+                                     </div>
+                                     <SortingFunction/>
+                                   </div>
+                           
+                         {/* Mobile Filter/Sort Bar */}
+                       <div className="lg:hidden flex items-center justify-between gap-3 mb-6">
+                         <button
+                           onClick={() => setShowMobileFilters(true)}
+                           className="relative flex gap-2 items-center justify-center px-4 py-2 text-sm rounded-full focus:outline-none select-none border border-neutral-300 text-neutral-700 hover:border-neutral-500 focus:border-neutral-500"
+                         >
+                           <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 6.5H16" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6 6.5H2" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10 10C11.933 10 13.5 8.433 13.5 6.5C13.5 4.567 11.933 3 10 3C8.067 3 6.5 4.567 6.5 6.5C6.5 8.433 8.067 10 10 10Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path><path d="M22 17.5H18" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8 17.5H2" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14 21C15.933 21 17.5 19.433 17.5 17.5C17.5 15.567 15.933 14 14 14C12.067 14 10.5 15.567 10.5 17.5C10.5 19.433 12.067 21 14 21Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                           Filters
+                         </button>
+                         <MobileSortingFunction/>
+                       </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {sortedProducts.length > 0 ? (

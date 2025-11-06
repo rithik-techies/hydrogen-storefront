@@ -88,7 +88,8 @@ function SearchResultsPages({term, pages}) {
  * @param {PartialSearchResult<'products'>}
  */
 function SearchResultsProducts({term, products}) {
-  if (!products?.nodes.length) {
+  console.log("length", products?.nodes?.length)
+  if (!products?.nodes?.length) {
     return null;
   }
 

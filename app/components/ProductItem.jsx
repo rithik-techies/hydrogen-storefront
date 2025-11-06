@@ -30,7 +30,7 @@ export function ProductItem({product, loading}) {
         {/* ❤️ Wishlist Button */}
         <button
           onClick={() => setIsWishlisted(!isWishlisted)}
-          className="w-9 h-9 flex items-center justify-center rounded-full bg-white dark:bg-slate-900 text-neutral-700 dark:text-slate-200 nc-shadow-lg absolute top-3 end-3 z-20"
+          className="w-9 h-9 flex items-center justify-center rounded-full bg-white dark:bg-slate-900 text-neutral-700 dark:text-slate-200 nc-shadow-lg absolute top-3 end-3 z-5"
         >
           <Heart
             className={`w-6 h-6 transition-colors duration-200 ${
