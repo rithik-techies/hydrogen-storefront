@@ -1081,6 +1081,7 @@ const PREDICTIVE_SEARCH_PRODUCT_FRAGMENT = `#graphql
     title
     handle
     trackingParameters
+
     selectedOrFirstAvailableVariant(
       selectedOptions: []
       ignoreUnknownOptions: true
@@ -1097,20 +1098,22 @@ const PREDICTIVE_SEARCH_PRODUCT_FRAGMENT = `#graphql
         amount
         currencyCode
       }
-         options {
-      name
-      optionValues {
+      compareAtPrice {
+        amount
+        currencyCode
+      }
+      availableForSale
+      selectedOptions {
         name
-        swatch {
-          color
-          image {
-            previewImage {
-              url
-            }
-          }
-        }
+        value
       }
     }
+
+    options {
+      name
+      values
+    }
+
     variants(first: 250) {
       nodes {
         id
@@ -1130,14 +1133,16 @@ const PREDICTIVE_SEARCH_PRODUCT_FRAGMENT = `#graphql
         }
       }
     }
+
     priceRange {
       minVariantPrice {
-        ...MoneyProductItem
+        amount
+        currencyCode
       }
       maxVariantPrice {
-        ...MoneyProductItem
+        amount
+        currencyCode
       }
-    }
     }
   }
 `;
