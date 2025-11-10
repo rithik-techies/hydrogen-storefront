@@ -4,6 +4,7 @@ import {useVariantUrl} from '~/lib/variants';
 import {AddToCartButton} from './AddToCartButton';
 import {useAside} from '~/components/Aside';
 import {useState} from 'react';
+import { useEffect } from 'react';
 import {Heart} from 'lucide-react';
 
 export function ProductItem({product, loading}) {
@@ -23,14 +24,33 @@ export function ProductItem({product, loading}) {
   const colorOption = product?.options?.find(
     (opt) => opt.name.toLowerCase() === 'color'
   );
+  useEffect(() => {
+    const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    setIsWishlisted(wishlist.includes(product.id));
+  }, [product.id]);
+
+  const toggleWishlist = () => {
+    const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    let updatedWishlist;
+    console.log("clicked")
+
+    if (wishlist.includes(product.id)) {
+      updatedWishlist = wishlist.filter((id) => id !== product.id);
+    } else {
+      updatedWishlist = [...wishlist, product.id];
+    }
+
+    localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
+    setIsWishlisted(!isWishlisted);
+  };
 
   return (
     <div className="group">
       <div className="relative group">
         {/* ❤️ Wishlist Button */}
         <button
-          onClick={() => setIsWishlisted(!isWishlisted)}
-          className="w-9 h-9 flex items-center justify-center rounded-full bg-white dark:bg-slate-900 text-neutral-700 dark:text-slate-200 nc-shadow-lg absolute top-3 end-3 z-5"
+          onClick={toggleWishlist}
+          className="w-9 h-9 flex items-center cursor-pointer justify-center rounded-full bg-white dark:bg-slate-900 text-neutral-700 dark:text-slate-200 nc-shadow-lg absolute top-3 end-3 z-5"
         >
           <Heart
             className={`w-6 h-6 transition-colors duration-200 ${
@@ -133,7 +153,13 @@ export function ProductItem({product, loading}) {
       {/* 💰 Price + Rating */}
       <div className="flex items-center justify-between text-sm font-medium mt-1">
         <div className="text-green-500 border-2 md:py-1.5 md:px-2.5 border-green-500 rounded-lg py-1 px-2 inline-block !leading-none">
-          <Money data={product?.priceRange?.minVariantPrice} />
+          {firstVariant?.price?.amount ? (
+            <Money data={firstVariant.price} />
+          ) : product?.priceRange?.minVariantPrice?.amount ? (
+            <Money data={product.priceRange.minVariantPrice} />
+          ) : (
+            <span className="text-gray-400">No price</span>
+          )}
         </div>
         <div className="flex items-center gap-1">
           <span className="text-yellow-500 text-xl">★</span>

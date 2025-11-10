@@ -8,6 +8,7 @@ import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {ProductItem} from '~/components/ProductItem';
 import Banner from '~/components/Banner';
 import banner_img_2 from '../assets/ciseco_img_with_text_1.webp';
+import ProductShowcase from '~/components/Product-with-images';
 
 /**
  * @type {MetaFunction<typeof loader>}
@@ -34,9 +35,10 @@ export async function loader(args) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  * @param {LoaderFunctionArgs}
  */
-async function loadCriticalData({context, params, request}) {
-  const {handle} = params;
-  const {storefront} = context;
+async function loadCriticalData({ context, params, request }) {
+  const { handle } = params;
+  const { storefront } = context;
+
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 12,
   });
@@ -45,24 +47,27 @@ async function loadCriticalData({context, params, request}) {
     throw redirect('/collections');
   }
 
-  const [{collection}] = await Promise.all([
+  const [ collection ,  expertRes ] = await Promise.all([
     storefront.query(COLLECTION_QUERY, {
-      variables: {handle, ...paginationVariables},
-      // Add other queries here, so that they are loaded in parallel
+      variables: { handle, ...paginationVariables },
+    }),
+    storefront.query(EXPERT_CHOSEN_PRODUCTS_QUERY, {
+      variables: { first: 20 },
     }),
   ]);
 
   if (!collection) {
-    throw new Response(`Collection ${handle} not found`, {
-      status: 404,
-    });
+    throw new Response(`Collection ${handle} not found`, { status: 404 });
   }
 
   // The API handle might be localized, so redirect to the localized handle
-  redirectIfHandleIsLocalized(request, {handle, data: collection});
+  redirectIfHandleIsLocalized(request, { handle, data: collection });
+   const expertChosenProducts =
+    expertRes?.shop?.metafield?.references?.nodes || []
 
   return {
     collection,
+    expertChosenProducts,
   };
 }
 
@@ -756,7 +761,7 @@ return (
                          <MobileSortingFunction/>
                        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10">
                   {sortedProducts.length > 0 ? (
                     sortedProducts.map(product => (
                       <ProductItem key={product.id} product={product} loading="lazy" />
@@ -792,6 +797,7 @@ return (
             background_color="white"
             buttonText_2="Saving combo"
           />
+          <ProductShowcase products={expertChosenProducts}/>
         </div>
       </div>
       {showMobileFilters && (
@@ -896,6 +902,86 @@ const COLLECTION_QUERY = `#graphql
           hasNextPage
           endCursor
           startCursor
+        }
+      }
+    }
+  }
+`;
+
+const EXPERT_CHOSEN_PRODUCTS_QUERY = `#graphql
+  query ExpertChosenProducts($first: Int!, $country: CountryCode, $language: LanguageCode)
+  @inContext(country: $country, language: $language) {
+    shop {
+      metafield(namespace: "custom", key: "product_chosen_by_expert") {
+        references(first: $first) {
+          nodes {
+            ... on Product {
+              id
+              title
+              handle
+              tags
+              description
+              availableForSale
+              featuredImage {
+                id
+                url
+                altText
+                width
+                height
+              }
+              priceRange {
+                minVariantPrice {
+                  amount
+                  currencyCode
+                }
+                maxVariantPrice {
+                  amount
+                  currencyCode
+                }
+              }
+              options {
+                name
+                optionValues {
+                  name
+                  swatch {
+                    color
+                    image {
+                      previewImage {
+                        url
+                      }
+                    }
+                  }
+                }
+              }
+              images(first: 10) {
+                nodes {
+                  url
+                  altText
+                  width
+                  height
+                }
+              }
+              variants(first: 10) {
+                nodes {
+                  id
+                  title
+                  availableForSale
+                  selectedOptions {
+                    name
+                    value
+                  }
+                  image {
+                    url
+                    altText
+                  }
+                  price {
+                    amount
+                    currencyCode
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

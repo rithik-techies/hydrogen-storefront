@@ -126,12 +126,14 @@ function loadDeferredData({context}) {
     .query(FOOTER_QUERY, {
       cache: storefront.CacheLong(),
       variables: {
-        footerMenuHandle: 'footer', // Adjust to your footer menu handle
+        country: storefront.i18n.country,
+        language: storefront.i18n.language,
+        mainMenuHandle: 'main-menu',
       },
     })
     .catch((error) => {
-      // Log query errors, but don't throw them so the page can still render
-      console.error(error);
+      // Log query errors, but don't break page rendering
+      console.error('Footer query failed:', error);
       return null;
     });
   return {

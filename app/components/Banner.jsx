@@ -19,23 +19,22 @@ export default function Banner({
   return (
     <div className="w-full min-h-screen relative flex items-center justify-center bg-white px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div className={`w-full max-w-7xl ${background_color ? `bg-${background_color}-50` : 'bg-white'} overflow-visible rounded-2xl`}>
-        <div className={`flex flex-col-reverse md:flex-row ${imagePosition === "right" ? "md:flex-row-reverse" : "md:flex-row"} items-center min-h-[500px]`}>
+        <div className={`flex flex-col-reverse ${imagePosition === "right" ? "lg:flex-row-reverse" : "lg:flex-row"} min-h-[500px] relative  items-center rounded-2xl sm:rounded-[40px]`}>
           
           {/* Left Side - Image */}
           {imageUrl && (
-            <div className="w-full md:w-1/2 relative flex items-end md:items-center justify-center overflow-visible">
-              <div className="relative w-full px-6 sm:px-8 md:px-12 pb-0 md:pb-0">
+            <div className="w-full relative flex-1 max-w-xl lg:max-w-none">
                 <img 
                   src={imageUrl}
                   alt={imageAlt || "Banner Image"}
-                  className="w-full z-100 h-full object-contain drop-shadow-2xl -mt-8 md:-mt-16 lg:-mt-20"
+                  className="w-full h-full object-cover"
                 />
-              </div>
+              
             </div>
           )}
 
           {/* Right Side - Text */}
-          <div className="w-full md:w-1/2 p-6 sm:p-8 md:p-12 space-y-4 sm:space-y-6">
+          <div className="relative flex-shrink-0 mb-16 lg:mb-0 lg:mr-10 lg:w-2/5">
             
             {/* Brand Logo */}
             {brand !== false && (

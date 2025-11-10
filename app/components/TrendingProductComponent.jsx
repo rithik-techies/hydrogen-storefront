@@ -468,8 +468,9 @@ const showProduct = sortedProducts.slice(0, 8);
                                                  <ChevronDown className={`w-4 h-4 ${ activeDropdown === 'price'? 'text-blue-900':'text-gray-400'}`} />
                                                </button>
                                                <DesktopDropdown type="price" isActive={activeDropdown === 'price'} category="price">
-                                                 <p className="text-xs text-gray-500 mb-3">
-                                                   The Max Price is {tempFilters.priceMax}
+                                                <h5 className='!m-0 font-medium'>Price</h5>
+                                                 <p className="text-xs !mb-5 text-gray-500">
+                                                   The Max Price is $ {tempFilters.priceMax}
                                                  </p>
                                                  
                                                  <div className="relative h-1 bg-gray-200 rounded-lg">
@@ -679,7 +680,7 @@ const showProduct = sortedProducts.slice(0, 8);
                                </div>
 
         {/* Products Grid */}
-       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10">
           {showProduct.length > 0 ? (
             showProduct.map(product => (
               <ProductItem key={product.id} product={product} loading="lazy" />
@@ -699,8 +700,8 @@ const showProduct = sortedProducts.slice(0, 8);
 
         {/* Mobile Filter Modal */}
         {showMobileFilters && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden">
-            <div className="absolute right-0 top-0 bottom-0 w-full max-w-md bg-white overflow-y-auto">
+          <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-40 lg:hidden">
+            <div className="min-h-screen text-center">
               <MobileFilterContent />
             </div>
           </div>

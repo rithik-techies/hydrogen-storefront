@@ -1,6 +1,8 @@
 import {Link} from 'react-router';
 import {Image, Money, Pagination} from '@shopify/hydrogen';
 import {urlWithTrackingParams} from '~/lib/search';
+import { PaginatedResourceSection } from './PaginatedResourceSection';
+import { ProductItem } from './ProductItem';
 
 /**
  * @param {Omit<SearchResultsProps, 'error' | 'type'>}
@@ -88,15 +90,27 @@ function SearchResultsPages({term, pages}) {
  * @param {PartialSearchResult<'products'>}
  */
 function SearchResultsProducts({term, products}) {
-  console.log("length", products?.nodes?.length)
   if (!products?.nodes?.length) {
     return null;
   }
 
   return (
-    <div className="search-result">
-      <h2>Products</h2>
-      <Pagination connection={products}>
+    <div className="search-result container">
+
+       <PaginatedResourceSection
+              connection={products}
+              resourcesClassName="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            >
+              {({node: product, index}) => (
+                <ProductItem
+                  key={product.id}
+                  product={product}
+                  loading={index < 8 ? 'eager' : undefined}
+                />
+              )}
+            </PaginatedResourceSection>
+      
+      {/* <Pagination connection={products}>
         {({nodes, isLoading, NextLink, PreviousLink}) => {
           const ItemsMarkup = nodes.map((product) => {
             const productUrl = urlWithTrackingParams({
@@ -143,13 +157,18 @@ function SearchResultsProducts({term, products}) {
           );
         }}
       </Pagination>
-      <br />
+      <br /> */}
     </div>
   );
 }
 
-function SearchResultsEmpty() {
-  return <p>No results, try a different search.</p>;
+function SearchResultsEmpty({ term }) {
+  const isEmptySearch = !term?.trim();
+  return <div className="text-center ">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" className="inline-block h-12 w-12 text-slate-400 "><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"></path></svg>
+        <h3 className="mt-2 text-sm font-semibold text-gray-900">No results found.</h3>
+        <div className="mt-1 text-sm text-gray-500">We couldn’t find any results. Try for something else.</div>
+    </div>;
 }
 
 /** @typedef {RegularSearchReturn['result']['items']} SearchItems */

@@ -11,32 +11,57 @@ import banner_img_2 from '../assets/ciseco_img_with_text_1.webp';
 import TrendingProducts from '~/components/TrendingProductComponent';
 import Testimonial from '~/components/Testimonial';
 import AllCollection from '~/components/AllCollection';
+import ProductShowcase from '~/components/Product-with-images';
 
 /** Loader */
 export async function loader({ context }) {
-  const [collectionsRes, featuredRes, blogsRes, products] = await Promise.all([
-    context.storefront.query(COLLECTIONS_QUERY, { variables: { first: 8 } }),
-    context.storefront.query(FEATURED_COLLECTION_QUERY, { variables: { handle: "new-arrivals", first: 8 } }),
-    context.storefront.query(LATEST_BLOGS_QUERY, { variables: { language: 'EN', blogHandle: 'news' } }),
-    context.storefront.query(TRENDING_PRODUCTS_QUERY, { variables: { first: 250 } }),
+  const [
+    collectionsRes,
+    featuredRes,
+    blogsRes,
+    trendingRes,
+    expertRes
+  ] = await Promise.all([
+    context.storefront.query(COLLECTIONS_QUERY, {
+      variables: { first: 8 },
+    }),
+    context.storefront.query(FEATURED_COLLECTION_QUERY, {
+      variables: { handle: "new-arrivals", first: 8 },
+    }),
+    context.storefront.query(LATEST_BLOGS_QUERY, {
+      variables: { language: "EN", blogHandle: "news" },
+    }),
+    context.storefront.query(TRENDING_PRODUCTS_QUERY, {
+      variables: { first: 250 },
+    }),
+    context.storefront.query(EXPERT_CHOSEN_PRODUCTS_QUERY, {
+      variables: { first: 20 },
+    }),
   ]);
 
   const collections = collectionsRes?.collections || null;
   const featuredCollection = featuredRes?.collection || null;
   const latestBlogs = blogsRes?.blog?.articles?.nodes || [];
-  const trendingProducts =products?.products?.nodes || [];
+  const trendingProducts = trendingRes?.products?.nodes || [];
+  const expertChosenProducts =
+    expertRes?.shop?.metafield?.references?.nodes || [];
 
-
-  return { collections, featuredCollection, latestBlogs, trendingProducts };
+  return {
+    collections,
+    featuredCollection,
+    latestBlogs,
+    trendingProducts,
+    expertChosenProducts,
+  };
 }
 
 /** Homepage */
 export default function Homepage() {
-  const { collections, featuredCollection, latestBlogs, trendingProducts } = useLoaderData();
+  const { collections, featuredCollection, latestBlogs, trendingProducts, expertChosenProducts } = useLoaderData();
   const handleClick = () => alert("Button clicked!");
   
   return (
-    <div className="home">
+    <div className="home sections">
       <SlideShow />
       {collections?.nodes && <CollectionSlider collections={collections.nodes} />}
       {featuredCollection && <FeaturedCollection collection={featuredCollection} />}
@@ -54,6 +79,7 @@ export default function Homepage() {
         buttonText_2="Saving combo"
       />
         <AllCollection collections={collections?.nodes}/>
+        <ProductShowcase products={expertChosenProducts}/>
       <Banner
         heading="Special offer in kids products"
         description="Fashion is a form of self-expression and autonomy at a particular period and place."
@@ -102,7 +128,13 @@ const COLLECTIONS_QUERY = `#graphql
 `;
 
 const FEATURED_COLLECTION_QUERY = `#graphql
-  query CollectionDetails($handle: String!, $first: Int!) {
+  query CollectionDetails(
+    $handle: String!,
+    $first: Int!,
+    $country: CountryCode,
+    $language: LanguageCode
+  )
+  @inContext(country: $country, language: $language) {
     collection(handle: $handle) {
       id
       title
@@ -212,47 +244,47 @@ const LATEST_BLOGS_QUERY = `#graphql
 `;
 
 const TRENDING_PRODUCTS_QUERY = `#graphql
-  #graphql
-query StoreProducts($first: Int!) {
-  products(first: $first, sortKey: UPDATED_AT) {
-    nodes {
-      id
-      title
-      handle
-      tags
-      description
-      featuredImage {
+  query StoreProducts($first: Int!, $country: CountryCode, $language: LanguageCode)
+  @inContext(country: $country, language: $language) {
+    products(first: $first, sortKey: UPDATED_AT) {
+      nodes {
         id
-        url
-        altText
-        width
-        height
-      }
-      priceRange {
-        minVariantPrice {
-          amount
-          currencyCode
+        title
+        handle
+        tags
+        description
+        featuredImage {
+          id
+          url
+          altText
+          width
+          height
         }
-        maxVariantPrice {
-          amount
-          currencyCode
-        }  
-      }
-      options {
-        name
-        optionValues {
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+          maxVariantPrice {
+            amount
+            currencyCode
+          }  
+        }
+        options {
           name
-          swatch {
-            color
-            image {
-              previewImage {
-                url
+          optionValues {
+            name
+            swatch {
+              color
+              image {
+                previewImage {
+                  url
+                }
               }
             }
           }
         }
-      }
-      variants(first: 10) {
+        variants(first: 10) {
           nodes {
             id
             title
@@ -271,7 +303,88 @@ query StoreProducts($first: Int!) {
             }
           }
         } 
+      }
     }
   }
-}
 `;
+
+const EXPERT_CHOSEN_PRODUCTS_QUERY = `#graphql
+  query ExpertChosenProducts($first: Int!, $country: CountryCode, $language: LanguageCode)
+  @inContext(country: $country, language: $language) {
+    shop {
+      metafield(namespace: "custom", key: "product_chosen_by_expert") {
+        references(first: $first) {
+          nodes {
+            ... on Product {
+              id
+              title
+              handle
+              tags
+              description
+              availableForSale
+              featuredImage {
+                id
+                url
+                altText
+                width
+                height
+              }
+              priceRange {
+                minVariantPrice {
+                  amount
+                  currencyCode
+                }
+                maxVariantPrice {
+                  amount
+                  currencyCode
+                }
+              }
+              options {
+                name
+                optionValues {
+                  name
+                  swatch {
+                    color
+                    image {
+                      previewImage {
+                        url
+                      }
+                    }
+                  }
+                }
+              }
+              images(first: 10) {
+                nodes {
+                  url
+                  altText
+                  width
+                  height
+                }
+              }
+              variants(first: 10) {
+                nodes {
+                  id
+                  title
+                  availableForSale
+                  selectedOptions {
+                    name
+                    value
+                  }
+                  image {
+                    url
+                    altText
+                  }
+                  price {
+                    amount
+                    currencyCode
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+

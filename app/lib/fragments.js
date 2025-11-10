@@ -165,8 +165,6 @@ export const CART_QUERY_FRAGMENT = `#graphql
 const MENU_FRAGMENT = `#graphql
   fragment MenuItem on MenuItem {
     id
-    resourceId
-    tags
     title
     type
     url
@@ -182,6 +180,8 @@ const MENU_FRAGMENT = `#graphql
   }
   fragment Menu on Menu {
     id
+    title
+    handle
     items {
       ...ParentMenuItem
     }
@@ -222,12 +222,13 @@ export const HEADER_QUERY = `#graphql
 export const FOOTER_QUERY = `#graphql
   query Footer(
     $country: CountryCode
-    $footerMenuHandle: String!
     $language: LanguageCode
+    $mainMenuHandle: String!
   ) @inContext(language: $language, country: $country) {
-    menu(handle: $footerMenuHandle) {
+    mainMenu: menu(handle: $mainMenuHandle) {
       ...Menu
     }
   }
+
   ${MENU_FRAGMENT}
 `;

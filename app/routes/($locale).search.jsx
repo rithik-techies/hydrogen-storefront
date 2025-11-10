@@ -43,12 +43,9 @@ export default function SearchPage() {
   if (type === 'predictive') return null;
  
     const products = result?.items?.products?.nodes || [];
-     console.log(products[1]);
-
-    const productPrices = products.map(p => Number(p.priceRange?.minVariantPrice?.amount || 0));
+    const productPrices = products.map(p => Number(p.selectedOrFirstAvailableVariant?.price?.amount));
     const minPrice = Math.min(...productPrices, 0);
     const maxPrice = Math.max(...productPrices, 0);
-    console.log("productPrices is ",productPrices); 
   
     const [activeDropdown, setActiveDropdown] = useState(null);
     const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -80,39 +77,65 @@ export default function SearchPage() {
   
   
     // Update dynamic filter options when products change
-    useEffect(() => {
-    const colorsSet = new Set();
-    const sizesSet = new Set();
-    const tagsSet = new Set();
-    products.forEach(product => {
-      console.log("product is ",product);
-      // Use product.options for colors and sizes
-    product.options?.forEach(option => {
-           const optionName = option.name?.toLowerCase();
-          if (optionName === 'color') {
-            option.optionValues?.forEach(v => {colorsSet.add(v.name);
-              console.log("colorset is ",colorsSet);
-            });
-          }
-        
-          if (optionName === 'size' || optionName === 'shoe size' || optionName ===  'tamaño') {
-            option.optionValues?.forEach(v => sizesSet.add(v.name));
-          }
-        });
-    
-        // Tags
-        product.tags?.forEach(tag => tagsSet.add(tag));
-      });
-  
-    setFilterOptions({
-      availability: ['In stock', 'Out of stock'],
-      colors: Array.from(colorsSet),
-      sizes: Array.from(sizesSet),
-      tags: Array.from(tagsSet)
-    });
-  }, [products]);
+   // 🧠 Smartly sync filters when new search results arrive
+useEffect(() => {
+  if (!products.length) return;
 
-  
+  // Calculate new min/max prices
+  const productPrices = products.map(
+    p => Number(p.selectedOrFirstAvailableVariant?.price?.amount || 0)
+  );
+  const minPrice = Math.min(...productPrices);
+  const maxPrice = Math.max(...productPrices);
+
+  // Collect valid filter options from current products
+  const colorsSet = new Set();
+  const sizesSet = new Set();
+  const tagsSet = new Set();
+
+  products.forEach(product => {
+    product.variants?.nodes?.forEach(variant => {
+      variant.selectedOptions?.forEach(opt => {
+        const name = opt.name?.toLowerCase();
+        if (name === "color") colorsSet.add(opt.value);
+        if (["size", "shoe size", "tamaño"].includes(name)) sizesSet.add(opt.value);
+      });
+    });
+    product.tags?.forEach(tag => tagsSet.add(tag));
+  });
+
+  // Helper: keep only still-valid filters
+  const keepValid = (values, validSet) =>
+    values.filter(v => validSet.has(v));
+
+  setFilters(prev => ({
+    ...prev,
+    // keep valid color, size, tag filters only
+    colors: keepValid(prev.colors, colorsSet),
+    sizes: keepValid(prev.sizes, sizesSet),
+    tags: keepValid(prev.tags, tagsSet),
+    // reset price range to new min/max if old is outside range
+    priceMin: Math.max(minPrice, prev.priceMin ?? minPrice),
+    priceMax: Math.min(maxPrice, prev.priceMax ?? maxPrice),
+  }));
+
+  setTempFilters(prev => ({
+    ...prev,
+    colors: keepValid(prev.colors, colorsSet),
+    sizes: keepValid(prev.sizes, sizesSet),
+    tags: keepValid(prev.tags, tagsSet),
+    priceMin: Math.max(minPrice, prev.priceMin ?? minPrice),
+    priceMax: Math.min(maxPrice, prev.priceMax ?? maxPrice),
+  }));
+
+  setFilterOptions({
+    availability: ['In stock', 'Out of stock'],
+    colors: Array.from(colorsSet),
+    sizes: Array.from(sizesSet),
+    tags: Array.from(tagsSet),
+  });
+}, [products]);
+
   
     useEffect(() => {
       if (activeDropdown) setTempFilters({ ...filters });
@@ -181,16 +204,16 @@ export default function SearchPage() {
     switch (sortBy.toLowerCase()) {  
       case 'price: low - high':
         sorted.sort((a, b) => {
-          const priceA = Number(a.priceRange?.minVariantPrice?.amount || 0);
-          const priceB = Number(b.priceRange?.minVariantPrice?.amount || 0);
+          const priceA = Number(a.selectedOrFirstAvailableVariant?.price?.amount || 0);
+          const priceB = Number(b.selectedOrFirstAvailableVariant?.price?.amount || 0);
           return priceA - priceB;
         });
         break;
   
       case 'price: high - low':
         sorted.sort((a, b) => {
-          const priceA = Number(a.priceRange?.maxVariantPrice?.amount || 0);
-          const priceB = Number(b.priceRange?.maxVariantPrice?.amount || 0);
+          const priceA = Number(a.selectedOrFirstAvailableVariant?.price?.amount || 0);
+          const priceB = Number(b.selectedOrFirstAvailableVariant?.price?.amount || 0);
           return priceB - priceA;
         });
         break;
@@ -204,59 +227,86 @@ export default function SearchPage() {
   };
   
   
-  
     const filterProducts = (products) => {
-      return products.filter(product => {
-        // Availability
+      if (!products?.length) return [];
+
+      return products.filter((product) => {
+        const variants = product?.variants?.nodes || [];
+        const mainVariant =
+          product.selectedOrFirstAvailableVariant ||
+          variants[0] ||
+          {};
+
+        // ✅ Availability
         if (filters.availability.length > 0) {
-          const variants = product?.variants?.nodes || [];
-          const inStockVariants = variants[0];
-          const isInStock = inStockVariants?.availableForSale !== false;
-          if (!filters.availability.some(av => (av === 'In stock' ? isInStock : !isInStock))) return false;
+          const isInStock = mainVariant?.availableForSale ?? true;
+          const matches = filters.availability.some(
+            (av) => (av === "In stock" ? isInStock : !isInStock)
+          );
+          if (!matches) return false;
         }
-  
-        // Price
-        const price = Number(product.priceRange?.minVariantPrice?.amount || 0);
+
+        // ✅ Price
+        const price =
+          Number(mainVariant?.price?.amount) ||
+          Number(product.priceRange?.minVariantPrice?.amount) ||
+          0;
+
         if (price < filters.priceMin || price > filters.priceMax) return false;
-  
-        // Color filter
-  if (filters.colors.length > 0) {
-    const hasColor = product.variants?.nodes?.some(variant =>
-      variant.selectedOptions?.some(opt =>
-        opt.name?.toLowerCase() === 'color' &&
-        filters.colors.includes(opt.value)
-      )
-    );
-    if (!hasColor) return false;
-  }
-  
-  // Size filter
-   if (filters.sizes.length > 0) {
-    const hasSize = product.variants?.nodes?.some(variant =>
-      variant.selectedOptions?.some(opt => {
-        const optName = opt.name?.toLowerCase();
-        return (
-          (optName === 'size' || optName === 'shoe size' || optName ===  'tamaño') &&
-          filters.sizes.includes(opt.value)
-        );
-      })
-    );
-    if (!hasSize) return false;
-  }
-  
-        // Tags
-        if (filters.tags.length > 0) {
-          if (!product.tags?.some(tag => filters.tags.includes(tag))) return false;
+
+        // ✅ Color
+        if (filters.colors.length > 0) {
+          const colorMatch =
+            variants.some((variant) =>
+              variant.selectedOptions?.some(
+                (opt) =>
+                  opt.name?.toLowerCase() === "color" &&
+                  filters.colors.includes(opt.value)
+              )
+            ) ||
+            mainVariant.selectedOptions?.some(
+              (opt) =>
+                opt.name?.toLowerCase() === "color" &&
+                filters.colors.includes(opt.value)
+            );
+
+          if (!colorMatch) return false;
         }
-  
+
+        // ✅ Size
+        if (filters.sizes.length > 0) {
+          const sizeMatch =
+            variants.some((variant) =>
+              variant.selectedOptions?.some((opt) => {
+                const optName = opt.name?.toLowerCase();
+                return (
+                  ["size", "shoe size", "tamaño"].includes(optName) &&
+                  filters.sizes.includes(opt.value)
+                );
+              })
+            ) ||
+            mainVariant.selectedOptions?.some((opt) => {
+              const optName = opt.name?.toLowerCase();
+              return (
+                ["size", "shoe size", "tamaño"].includes(optName) &&
+                filters.sizes.includes(opt.value)
+              );
+            });
+
+          if (!sizeMatch) return false;
+        }
+
+        // ✅ Tags
+        if (filters.tags.length > 0) {
+          if (!product.tags?.some((tag) => filters.tags.includes(tag)))
+            return false;
+        }
+
         return true;
       });
     };
   const filteredProducts = filterProducts(products); 
-  const sortedProducts = sortProducts(filteredProducts, sortBy);
-  console.log("sort" , sortedProducts)
-  
-  
+  const sortedProducts = sortProducts(filteredProducts, sortBy);  
   
     const DesktopDropdown = ({ children, isActive, category }) => (
       <div className={`absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-xl border p-6 w-80 z-50 ${isActive ? 'block ' : 'hidden'}`}>
@@ -473,7 +523,9 @@ export default function SearchPage() {
       </SearchForm>
       </div>
       </div>
-          <div className='container'>
+
+         {result?.total > 0 && (
+         <div className='container'>
             <div className="hidden lg:flex items-centerborder-b border-slate-200 pb-8 gap-3 mb-8 flex-wrap relative" ref={dropdownRef}>
                           {/* Availability Filter */}
                           <div className="relative">
@@ -732,19 +784,31 @@ export default function SearchPage() {
               </button>
               <MobileSortingFunction/>
             </div>
-         </div>
+         </div>)}
       {/* {error && <p style={{color: 'red'}}>{error}</p>} */}
-      {!term || !result?.total ? (
+          {!term || !result?.total ? (
+            <div className='container'>
         <SearchResults.Empty />
+        </div>
       ) : (
-        <SearchResults result={result} term={term}>
-          {({articles, pages, products, term}) => (
+        <SearchResults
+          result={{
+            ...result,
+            items: {
+              ...result.items,
+              products: {
+                ...result.items.products,
+                nodes: sortedProducts || [], // ✅ inject sorted/filtered products
+              },
+            },
+          }}
+          term={term}
+        >
+          {({products, term}) => (
             <div>
               <SearchResults.Products products={products} term={term} />
-              {/* <SearchResults.Pages pages={pages} term={term} />
-              <SearchResults.Articles articles={articles} term={term} /> */}
             </div>
-            )} 
+          )}
         </SearchResults>
       )}
       <Analytics.SearchView data={{searchTerm: term, searchResults: result}} />
@@ -777,6 +841,45 @@ const SEARCH_PRODUCT_FRAGMENT = `#graphql
     title
     trackingParameters
     vendor
+      options {
+      name
+      optionValues {
+        name
+        swatch {
+          color
+          image {
+            previewImage {
+              url
+            }
+          }
+        }
+      }
+    }
+    variants(first: 100) {
+      nodes {
+        id
+        title
+        availableForSale
+        image {
+          url
+          altText
+          width
+          height
+        }
+        price {
+          amount
+          currencyCode
+        }
+        compareAtPrice {
+          amount
+          currencyCode
+        }
+        selectedOptions {
+          name
+          value
+        }
+      }
+    }
     selectedOrFirstAvailableVariant(
       selectedOptions: []
       ignoreUnknownOptions: true

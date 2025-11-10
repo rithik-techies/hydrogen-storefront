@@ -38,7 +38,7 @@ export default function SlideShow() {
   };
 
   return (
-    <div className="relative w-full h-80 sm:h-80 md:h-80 lg:h-96 xl:h-100 2xl:h-130 bg-gray-50
+    <div className="relative w-full flex flex-col-reverse h-80 sm:h-80 md:h-80 lg:h-96 xl:h-100 2xl:h-130 bg-gray-50
 ">
       <div className="relative w-full h-full overflow-hidden">
         {slides.map((slide, index) => (

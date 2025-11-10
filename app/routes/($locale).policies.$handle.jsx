@@ -44,15 +44,23 @@ export default function Policy() {
   const {policy} = useLoaderData();
 
   return (
-    <div className="policy">
+    <div className="policy container py-8 lg:py-14">
       <br />
       <br />
-      <div>
-        <Link to="/policies">← Back to Policies</Link>
+      <div className='flex flex-col items-baseline w-full gap-8 md:flex-row'>
+        <div className='flex-grow md:sticky top-36 md:w-5/12'>
+      <br />
+      <div className='nc-Section-Heading relative flex flex-col sm:flex-row sm:items-end justify-between block text-2xl sm:text-3xl lg:text-4xl font-semibold'>
+      <h1 className='text-3xl !m-0 md:text-4xl font-semibold'>{policy.title}</h1>
       </div>
-      <br />
-      <h1>{policy.title}</h1>
-      <div dangerouslySetInnerHTML={{__html: policy.body}} />
+      <div>
+        <Link className='inline-block justify-self-start text-sm font-medium hover:underline mt-3 lg:mt-5' to="/policies">← Back to Policies</Link>
+      </div>
+      </div>
+      <div className='flex-grow w-full md:w-7/12'>
+      <div className='prose dark:prose-invert' dangerouslySetInnerHTML={{__html: policy.body}} />
+      </div>
+      </div>
     </div>
   );
 }
