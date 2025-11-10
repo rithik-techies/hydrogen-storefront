@@ -98,7 +98,7 @@ export function ProductItem({product, loading}) {
       {/* 🎨 Color Swatches */}
       {colorOption && (
         <div className="flex gap-2 my-4 flex-wrap">
-          {colorOption.optionValues.map((valueObj, i) => {
+          {colorOption.optionValues?.map((valueObj, i) => {
             const value = valueObj.name;
 
             // Find variant matching this color

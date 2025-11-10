@@ -21,23 +21,13 @@ export default {
         executionContext,
       );
 
-      // --- 🧩 Fix for Vercel Edge ---
-      // When running on Vercel, virtual imports cannot be resolved directly.
-      // So we fallback to the real compiled file if available.
-      let build;
-      try {
-        build = await import('virtual:react-router/server-build');
-      } catch {
-        build = await import('./build/server/index.js');
-      }
-      // --- end fix ---
-
       /**
        * Create a Remix request handler and pass
        * Hydrogen's Storefront client to the loader context.
        */
       const handleRequest = createRequestHandler({
-        build,
+        // eslint-disable-next-line import/no-unresolved
+        build: await import('virtual:react-router/server-build'),
         mode: process.env.NODE_ENV,
         getLoadContext: () => appLoadContext,
       });

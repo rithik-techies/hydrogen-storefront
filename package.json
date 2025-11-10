@@ -5,11 +5,11 @@
   "version": "2025.5.1",
   "type": "module",
   "scripts": {
-    "build": "shopify hydrogen build --codegen && cp -r dist build",
-    "dev": "shopify hydrogen dev --codegen",
-    "preview": "shopify hydrogen preview --build",
-    "lint": "eslint --no-error-on-unmatched-pattern .",
-    "codegen": "shopify hydrogen codegen"
+  "build": "shopify hydrogen build --codegen && mkdir -p build/server && cp dist/server/index.js build/server/index.js",
+  "dev": "shopify hydrogen dev --codegen",
+  "preview": "shopify hydrogen preview --build",
+  "lint": "eslint --no-error-on-unmatched-pattern .",
+  "codegen": "shopify hydrogen codegen"
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
@@ -66,6 +66,8 @@
     "defaults"
   ],
   "vercel": {
-    "runtime": "edge"
+    "runtime": "edge",
+    "buildCommand": "npm run vercel-build",
+    "outputDirectory": "dist"
   }
 }

@@ -843,7 +843,17 @@ const SEARCH_PRODUCT_FRAGMENT = `#graphql
     vendor
     options {
       name
-      values
+      optionValues {
+        name
+        swatch {
+          color
+          image {
+            previewImage {
+              url
+            }
+          }
+        }
+      }
     }
     variants(first: 100) {
       nodes {
@@ -870,6 +880,7 @@ const SEARCH_PRODUCT_FRAGMENT = `#graphql
         }
       }
     }
+
     selectedOrFirstAvailableVariant(
       selectedOptions: []
       ignoreUnknownOptions: true
@@ -1109,6 +1120,7 @@ const PREDICTIVE_SEARCH_PRODUCT_FRAGMENT = `#graphql
       }
     }
 
+    # All product options, including Color
     options {
       name
       values
