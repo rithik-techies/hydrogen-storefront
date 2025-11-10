@@ -1,8 +1,8 @@
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
-import Avatar_1 from '../assets/testimonial-1.avif'
-import Avatar_2 from '../assets/testimonial-2.avif'
-import Avatar_3 from '../assets/testimonial-3.avif'
+import Avatar_1 from '../assets/Testimonial-1.avif'
+import Avatar_2 from '../assets/Testimonial-2.avif'
+import Avatar_3 from '../assets/Testimonial-3.avif'
 
 export default function Testimonial() {
   const [currentIndex, setCurrentIndex] = useState(0);
