@@ -22,7 +22,7 @@ export async function loader({ context }) {
     trendingRes,
     expertRes
   ] = await Promise.all([
-    context.storefront.query(COLLECTIONS_QUERY, {
+    context.storefront.query(COLLECTION_QUERY, {
       variables: { first: 8 },
     }),
     context.storefront.query(FEATURED_COLLECTION_QUERY, {
@@ -99,7 +99,7 @@ export default function Homepage() {
 
 /* --- GraphQL Queries --- */
 
-const COLLECTIONS_QUERY = `#graphql
+const COLLECTION_QUERY = `#graphql
   fragment Collection on Collection {
     id
     title
@@ -118,7 +118,7 @@ const COLLECTIONS_QUERY = `#graphql
     }   
   }
 
-  query StoreCollections($first: Int!) {
+  query HomeStoreCollections($first: Int!) {
     collections(first: $first, sortKey: TITLE) {
       nodes {
         ...Collection

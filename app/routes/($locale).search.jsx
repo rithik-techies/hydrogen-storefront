@@ -841,19 +841,9 @@ const SEARCH_PRODUCT_FRAGMENT = `#graphql
     title
     trackingParameters
     vendor
-      options {
+    options {
       name
-      optionValues {
-        name
-        swatch {
-          color
-          image {
-            previewImage {
-              url
-            }
-          }
-        }
-      }
+      values
     }
     variants(first: 100) {
       nodes {

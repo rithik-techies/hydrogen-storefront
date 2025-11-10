@@ -240,7 +240,8 @@ const COLLECTIONS_QUERY = `#graphql
       }
     }
   }
-  query StoreCollections(
+
+  query CollectionsPageQuery(
     $country: CountryCode
     $endCursor: String
     $first: Int
