@@ -1,14 +1,15 @@
 {
-  "version": 3,
-  "functions": {
-    "server.js": {
-      "runtime": "edge"
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/edge"
     }
-  },
+  ],
   "routes": [
     {
-      "src": "/.*",
-      "dest": "/server.js"
+      "src": "/(.*)",
+      "dest": "server.js"
     }
   ]
 }
