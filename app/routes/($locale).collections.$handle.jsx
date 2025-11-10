@@ -35,39 +35,35 @@ export async function loader(args) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  * @param {LoaderFunctionArgs}
  */
-async function loadCriticalData({ context, params, request }) {
-  const { handle } = params;
-  const { storefront } = context;
-
+async function loadCriticalData({context, params, request}) {
+  const {handle} = params;
+  const {storefront} = context;
   const paginationVariables = getPaginationVariables(request, {
-    pageBy: 12,
+    pageBy: 8,
   });
 
   if (!handle) {
     throw redirect('/collections');
   }
 
-  const [ collection ,  expertRes ] = await Promise.all([
+  const [{collection}] = await Promise.all([
     storefront.query(COLLECTION_QUERY, {
-      variables: { handle, ...paginationVariables },
-    }),
-    storefront.query(EXPERT_CHOSEN_PRODUCTS_QUERY, {
-      variables: { first: 20 },
+      variables: {handle, ...paginationVariables},
+      // Add other queries here, so that they are loaded in parallel
     }),
   ]);
 
   if (!collection) {
-    throw new Response(`Collection ${handle} not found`, { status: 404 });
+    throw new Response(`Collection ${handle} not found`, {
+      status: 404,
+    });
   }
 
   // The API handle might be localized, so redirect to the localized handle
-  redirectIfHandleIsLocalized(request, { handle, data: collection });
-   const expertChosenProducts =
-    expertRes?.shop?.metafield?.references?.nodes || []
+  redirectIfHandleIsLocalized(request, {handle, data: collection});
 
   return {
     collection,
-    expertChosenProducts,
   };
 }
 
@@ -797,7 +793,6 @@ return (
             background_color="white"
             buttonText_2="Saving combo"
           />
-          <ProductShowcase products={expertChosenProducts}/>
         </div>
       </div>
       {showMobileFilters && (
