@@ -64,5 +64,8 @@
   },
   "browserslist": [
     "defaults"
-  ]
+  ],
+  "vercel": {
+    "runtime": "edge"
+  }
 }
