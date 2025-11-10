@@ -1,0 +1,14 @@
+{
+  "version": 3,
+  "functions": {
+    "server.js": {
+      "runtime": "edge"
+    }
+  },
+  "routes": [
+    {
+      "src": "/.*",
+      "dest": "/server.js"
+    }
+  ]
+}
