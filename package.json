@@ -5,12 +5,11 @@
   "version": "2025.5.1",
   "type": "module",
   "scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "vercel-build": "vite build",
-  "preview": "vite preview",
-  "lint": "eslint --no-error-on-unmatched-pattern .",
-  "codegen": "shopify hydrogen codegen"
+    "build": "shopify hydrogen build --codegen",
+    "dev": "shopify hydrogen dev --codegen",
+    "preview": "shopify hydrogen preview --build",
+    "lint": "eslint --no-error-on-unmatched-pattern .",
+    "codegen": "shopify hydrogen codegen"
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
