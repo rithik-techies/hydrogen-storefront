@@ -1,41 +1,90 @@
-import { createRequestHandler } from '@shopify/remix-oxygen';
-import * as build from './build/server/index.js';
+// Virtual entry point for the app
+import {storefrontRedirect} from '@shopify/hydrogen';
+import {createRequestHandler} from '@shopify/remix-oxygen';
+import {createAppLoadContext} from '~/lib/context';
 
-/**
- * Node entry point for Hydrogen (Remix) to run on Vercel.
- */
-export default async function handler(request, response) {
-  try {
-    // Convert the Vercel Node request into a standard Fetch Request
-    const remixHandler = createRequestHandler({
-      build,
-      mode: process.env.NODE_ENV,
-    });
+export default {
+  async fetch(request, env, executionContext) {
+    try {
+      const appLoadContext = await createAppLoadContext(request, env, executionContext);
 
-    const req = new Request(
-      request.url || `https://${request.headers.host}${request.originalUrl}`,
-      {
-        method: request.method,
-        headers: request.headers,
-        body:
-          request.method !== 'GET' && request.method !== 'HEAD'
-            ? request
-            : undefined,
+      // ✅ Use dynamic import only in production
+      // Prevent Vite from trying to resolve ./build/server/index.js during build
+      let build;
+      if (process.env.NODE_ENV === 'production') {
+        const buildPath = './dist/server/index.js';
+        build = (await import(/* @vite-ignore */ buildPath)).default;
+      } else {
+        build = await import('virtual:react-router/server-build');
       }
-    );
 
-    const res = await remixHandler(req);
+      const handleRequest = createRequestHandler({
+        build,
+        mode: process.env.NODE_ENV,
+        getLoadContext: () => appLoadContext,
+      });
 
-    // Write Remix's Response back to Node response
-    const headers = Object.fromEntries(res.headers.entries());
-    response.writeHead(res.status, headers);
-    const body = await res.text();
-    response.end(body);
-  } catch (err) {
-    console.error('💥 Error in Vercel Hydrogen handler:', err);
-    response.status(500).send('Internal Server Error');
-  }
-}
+      const response = await handleRequest(request);
+
+      if (appLoadContext.session?.isPending) {
+        response.headers.set('Set-Cookie', await appLoadContext.session.commit());
+      }
+
+      if (response.status === 404) {
+        return storefrontRedirect({
+          request,
+          response,
+          storefront: appLoadContext.storefront,
+        });
+      }
+
+      return response;
+    } catch (error) {
+      console.error(error);
+      return new Response('An unexpected error occurred', {status: 500});
+    }
+  },
+};
+
+
+// import { createRequestHandler } from '@shopify/remix-oxygen';
+// import * as build from './build/server/index.js';
+
+// /**
+//  * Node entry point for Hydrogen (Remix) to run on Vercel.
+//  */
+// export default async function handler(request, response) {
+//   try {
+//     // Convert the Vercel Node request into a standard Fetch Request
+//     const remixHandler = createRequestHandler({
+//       build,
+//       mode: process.env.NODE_ENV,
+//     });
+
+//     const req = new Request(
+//       request.url || `https://${request.headers.host}${request.originalUrl}`,
+//       {
+//         method: request.method,
+//         headers: request.headers,
+//         body:
+//           request.method !== 'GET' && request.method !== 'HEAD'
+//             ? request
+//             : undefined,
+//       }
+//     );
+
+//     const res = await remixHandler(req);
+
+//     // Write Remix's Response back to Node response
+//     const headers = Object.fromEntries(res.headers.entries());
+//     response.writeHead(res.status, headers);
+//     const body = await res.text();
+//     response.end(body);
+//   } catch (err) {
+//     console.error('💥 Error in Vercel Hydrogen handler:', err);
+//     response.status(500).send('Internal Server Error');
+//   }
+// }
 
 
 
