@@ -1,21 +1,10 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
+  "functions": {
+    "server.js": {
+      "runtime": "nodejs18.x"
     }
-  ],
+  },
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "server.js"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production",
-    "SESSION_SECRET": "foobar",
-    "PUBLIC_STORE_DOMAIN": "techies-dev.myshopify.com",
-    "PUBLIC_STOREFRONT_API_TOKEN": "ccebd79f5542bf2429f2ec736e7f6f72"
-  }
+    { "src": "/(.*)", "dest": "/server.js" }
+  ]
 }

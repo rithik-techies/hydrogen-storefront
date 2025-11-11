@@ -8,6 +8,7 @@
     "dev": "shopify hydrogen dev",
   "build": "shopify hydrogen build",
   "start": "node server.js",
+  "vercel-build": "vite build",
     "preview": "shopify hydrogen preview --build",
     "lint": "eslint --no-error-on-unmatched-pattern .",
     "codegen": "shopify hydrogen codegen"

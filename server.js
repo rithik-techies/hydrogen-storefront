@@ -12,8 +12,8 @@ export default {
       // Prevent Vite from trying to resolve ./build/server/index.js during build
       let build;
       if (process.env.NODE_ENV === 'production') {
-        const buildPath = './dist/server/index.js';
-        build = (await import(/* @vite-ignore */ buildPath)).default;
+       const buildPath = new URL('./dist/server/index.js', import.meta.url).pathname;
+      build = (await import(`file://${buildPath}`)).default;
       } else {
         build = await import('virtual:react-router/server-build');
       }
