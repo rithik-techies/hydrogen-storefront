@@ -4,19 +4,26 @@ import {oxygen} from '@shopify/mini-oxygen/vite';
 import {reactRouter} from '@react-router/dev/vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import tailwindcss from '@tailwindcss/vite';
+import path from 'path';
+import {fileURLToPath} from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [
     tailwindcss(),
     hydrogen(),
     oxygen(),
-    reactRouter({
-      ssr: true, // ensures SSR build
-    }),
+    reactRouter({ ssr: true }),
     tsconfigPaths(),
   ],
+  resolve: {
+    alias: {
+      '~': path.resolve(__dirname, 'app'),
+    },
+  },
   build: {
-    outDir: 'build',
+    outDir: 'dist',
     emptyOutDir: true,
     ssr: true,
     rollupOptions: {
@@ -32,10 +39,9 @@ export default defineConfig({
       '@shopify/remix-oxygen',
       '@shopify/mini-oxygen',
     ],
-    external: [], // ensure no server file is pulled into client
   },
   optimizeDeps: {
-    exclude: ['./app/entry.server.jsx'], // ⛔ exclude server entry from client
+    exclude: ['./app/entry.server.jsx'],
   },
 });
 
