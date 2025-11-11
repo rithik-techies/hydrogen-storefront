@@ -1,7 +1,7 @@
 // Vercel serverless function entry point for Hydrogen
 import {storefrontRedirect} from '@shopify/hydrogen';
 import {createRequestHandler} from '@shopify/remix-oxygen';
-import {createAppLoadContext} from '../app/lib/context-vercel.js';
+import {createAppLoadContext} from '../../app/lib/context-vercel.js';
 
 /**
  * Vercel serverless function handler
@@ -14,10 +14,21 @@ export default async function handler(req, res) {
     const host = req.headers.host;
     const url = new URL(req.url, `${protocol}://${host}`);
     
-    // Handle request body
+    // Handle request body - Vercel already parses JSON, but we need raw body for some cases
     let body = null;
-    if (req.method !== 'GET' && req.method !== 'HEAD' && req.body) {
-      body = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      // For Vercel, req.body is already parsed if Content-Type is JSON
+      // But we need to handle raw body for form submissions, etc.
+      if (req.body) {
+        if (typeof req.body === 'string') {
+          body = req.body;
+        } else if (Buffer.isBuffer(req.body)) {
+          body = req.body;
+        } else {
+          // Already parsed JSON or object
+          body = JSON.stringify(req.body);
+        }
+      }
     }
     
     const request = new Request(url, {
@@ -53,20 +64,35 @@ export default async function handler(req, res) {
       executionContext,
     );
 
-    // Import the server build - path may vary based on build output
-    // Try to import from the dist directory
+    // Import the server build
+    // React Router with Vite creates a server build that needs to be imported
+    // The build is typically in .react-router/server-build or dist/.react-router/server-build
     let build;
-    try {
-      // For Vercel, the build should be in the dist directory
-      build = await import('../dist/server/index.js');
-    } catch (e) {
-      // Fallback: try virtual import (may not work in Vercel)
+    const possiblePaths = [
+      '../../.react-router/server-build/index.js',
+      '../../dist/.react-router/server-build/index.js',
+      '../../.react-router/server-build.js',
+      '../../dist/.react-router/server-build.js',
+    ];
+    
+    let lastError;
+    for (const path of possiblePaths) {
       try {
-        build = await import('virtual:react-router/server-build');
-      } catch (e2) {
-        console.error('Failed to import server build:', e2);
-        throw new Error('Could not load server build. Make sure the build completed successfully.');
+        build = await import(path);
+        break;
+      } catch (e) {
+        lastError = e;
+        continue;
       }
+    }
+    
+    if (!build) {
+      console.error('Failed to import server build. Tried paths:', possiblePaths);
+      console.error('Last error:', lastError);
+      throw new Error(
+        'Could not load server build. Make sure the build completed successfully. ' +
+        'Check Vercel build logs for React Router build output location.'
+      );
     }
     
     // Create request handler
@@ -101,7 +127,20 @@ export default async function handler(req, res) {
     return convertResponseToVercel(response, res);
   } catch (error) {
     console.error('Vercel handler error:', error);
-    res.status(500).json({error: 'An unexpected error occurred'});
+    console.error('Error stack:', error.stack);
+    console.error('Error details:', {
+      message: error.message,
+      name: error.name,
+      cause: error.cause,
+    });
+    
+    // Return proper error response
+    if (!res.headersSent) {
+      res.status(500).json({
+        error: 'An unexpected error occurred',
+        message: process.env.NODE_ENV === 'development' ? error.message : undefined,
+      });
+    }
   }
 }
 
