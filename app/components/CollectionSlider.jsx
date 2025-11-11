@@ -151,7 +151,7 @@ export default function CollectionSlider({ collections = [] }) {
                     href={`/collections/${item.handle}`}
                     className={`${item.bgColor} rounded-2xl sm:rounded-3xl p-6 sm:p-7 lg:p-9 min-h-[280px] sm:min-h-[320px] lg:min-h-[360px] flex flex-col justify-between relative overflow-hidden transition-all duration-300 group block h-full`}
                   >
-                    <span class="opacity-0 group-hover:opacity-40 absolute inset-0 bg-black/10 transition-opacity"></span>
+                    <span className="opacity-0 group-hover:opacity-40 absolute inset-0 bg-black/10 transition-opacity"></span>
                     {/* Content */}
                     <div className="relative z-10">
                       <p className="text-xs sm:text-sm text-gray-600 mb-2 lg:mb-3 font-medium tracking-wider">

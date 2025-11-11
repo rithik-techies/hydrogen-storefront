@@ -123,7 +123,7 @@ export default function Article() {
       <h1 className='!my-2 text-neutral-900 font-semibold text-3xl md:text-4xl md:!leading-[120%] lg:text-4xl dark:text-neutral-100 max-w-4xl '>
         {title}
         </h1>
-       <div class="w-full border-b border-neutral-100 dark:border-neutral-800"></div>
+       <div className="w-full border-b border-neutral-100 dark:border-neutral-800"></div>
 
         <div className="nc-PostMeta2 flex items-center flex-wrap text-neutral-700 text-left dark:text-neutral-200 text-sm leading-none flex-shrink-0">
       <div className="wil-avatar relative flex-shrink-0 bg-[rgb(48,195,158)] inline-flex items-center justify-center text-neutral-100 uppercase font-semibold shadow-inner rounded-full w-8 h-8 sm:h-11 sm:w-11  flex-shrink-0">

@@ -28,10 +28,10 @@ export function CartSummary({cart, layout}) {
       </div>
       {/* <CartDiscounts discountCodes={cart.discountCodes} />
       <CartGiftCard giftCardCodes={cart.appliedGiftCards} /> */}
-      <div class="flex justify-center text-center text-sm text-gray-500">
+      <div className="flex justify-center text-center text-sm text-gray-500">
         <p>or {' '}
           <Link to="/collections" prefetch="viewport">
-          <button type="button" class="font-medium cursor-pointer text-blue-600 hover:text-blue-500">Continue Shopping
+          <button type="button" className="font-medium cursor-pointer text-blue-600 hover:text-blue-500">Continue Shopping
             <span> →</span>
           </button>
           </Link>

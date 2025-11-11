@@ -39,9 +39,9 @@ const CollectionExplorer = ({ collections = [] }) => {
     <div className="min-h-screen bg-neutral-100">
       <div className="container px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         {/* Header */}
-       <div class="nc-Section-Heading relative flex flex-col sm:flex-row sm:items-end justify-between mb-12 lg:mb-14 text-neutral-900 dark:text-neutral-50">
-        <div class="flex flex-col items-center text-center w-full mx-auto">
-            <h2 class="justify-center text-3xl md:text-4xl !m-0 2xl:text-5xl font-semibold">Start exploring.</h2>
+       <div className="nc-Section-Heading relative flex flex-col sm:flex-row sm:items-end justify-between mb-12 lg:mb-14 text-neutral-900 dark:text-neutral-50">
+        <div className="flex flex-col items-center text-center w-full mx-auto">
+            <h2 className="justify-center text-3xl md:text-4xl !m-0 2xl:text-5xl font-semibold">Start exploring.</h2>
         </div>
        </div>
 
@@ -93,7 +93,7 @@ const CollectionExplorer = ({ collections = [] }) => {
       </div>
 
       {/* Fade-in animation */}
-      <style jsx>{`
+      <style jsx="true">{`
         @keyframes fadeIn {
           from {
             opacity: 0;
