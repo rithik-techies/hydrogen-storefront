@@ -85,18 +85,18 @@ export default function FeaturedCollection({ collection }) {
             <button
               onClick={prevSlide}
               disabled={isTransitioning}
-              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-gray-300 flex items-center justify-center hover:bg-gray-100 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              className="w-10 h-10  rounded-full border-2 border-gray-300 flex items-center justify-center hover:bg-gray-100 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               aria-label="Previous products"
             >
-              <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+              <ArrowLeft className="w-5 h-5" />
             </button>
             <button
               onClick={nextSlide}
               disabled={isTransitioning}
-              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-gray-300 flex items-center justify-center hover:bg-gray-100 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              className="w-10 h-10  rounded-full border-2 border-gray-300 flex items-center justify-center hover:bg-gray-100 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               aria-label="Next products"
             >
-              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
+              <ArrowRight className="w-5 h-5" />
             </button>
           </div>
         )}

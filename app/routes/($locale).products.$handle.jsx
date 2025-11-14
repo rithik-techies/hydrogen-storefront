@@ -294,6 +294,7 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
     }
     id
     image {
+      __typename
       id
       url
       altText
@@ -328,20 +329,30 @@ const PRODUCT_FRAGMENT = `#graphql
     vendor
     handle
     descriptionHtml
+    description
+    encodedVariantExistence
+    encodedVariantAvailability
     options {
       name
       optionValues {
         name
+        firstSelectableVariant {
+          ...ProductVariant
+        }
+        swatch {
+          color
+          image {
+            previewImage {
+              url
+            }
+          }
+        }
       }
     }
-    selectedOrFirstAvailableVariant(
-      selectedOptions: $selectedOptions
-      ignoreUnknownOptions: true
-      caseInsensitiveMatch: true
-    ) {
+    selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
       ...ProductVariant
     }
-    adjacentVariants(selectedOptions: $selectedOptions) {
+    adjacentVariants (selectedOptions: $selectedOptions) {
       ...ProductVariant
     }
     seo {

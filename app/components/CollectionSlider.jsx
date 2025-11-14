@@ -113,18 +113,18 @@ export default function CollectionSlider({ collections = [] }) {
               <button
                 onClick={handlePrev}
                 disabled={!canScrollLeft || isTransitioning}
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-gray-300 flex items-center justify-center hover:bg-gray-50 hover:border-gray-400 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 transition-all duration-200 active:scale-95"
+                className="w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center hover:bg-gray-50 hover:border-gray-400 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 transition-all duration-200 active:scale-95"
                 aria-label="Previous collection"
               >
-                <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                <ArrowLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={handleNext}
                 disabled={!canScrollRight || isTransitioning}
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-gray-300 flex items-center justify-center hover:bg-gray-50 hover:border-gray-400 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 transition-all duration-200 active:scale-95"
+                className="w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center hover:bg-gray-50 hover:border-gray-400 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 transition-all duration-200 active:scale-95"
                 aria-label="Next collection"
               >
-                <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                <ArrowRight className="w-5 h-5 " />
               </button>
             </div>
           </div>

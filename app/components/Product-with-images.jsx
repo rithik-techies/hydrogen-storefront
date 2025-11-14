@@ -8,11 +8,6 @@ function ProductCard({ product }) {
   const images = product.images?.nodes || []; // ✅ correctly access nodes array
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const nextImage = () =>
-    setCurrentImageIndex((prev) => Math.min(images.length - 1, prev + 1));
-  const prevImage = () =>
-    setCurrentImageIndex((prev) => Math.max(0, prev - 1));
-
   return (
     <div className="flex flex-col gap-4">
       {/* Main Image */}
